@@ -19,7 +19,12 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
+Route.get('/', async ({ response }: HttpContextContract) => {
+  const report = await HealthCheck.getReport()
+
+  return report.healthy ? response.ok(report) : response.badRequest(report)
 })
