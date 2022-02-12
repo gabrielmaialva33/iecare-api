@@ -32,6 +32,7 @@
     "luxon": "^2.3.0",
     "pg": "^8.7.3",
     "pino-pretty": "^7.5.1",
+    "pretty-list-routes": "^0.0.5",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21"
