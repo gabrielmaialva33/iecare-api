@@ -45,7 +45,7 @@ const databaseConfig: DatabaseConfig = {
       migrations: {
         naturalSort: true,
       },
-      healthCheck: true,
+      healthCheck: true, // 👈 enabled
       debug: Env.get('PG_DB_DEBUG', false),
     },
   },
