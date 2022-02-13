@@ -26,8 +26,8 @@ export default class Role extends BaseModel {
   public permissions: object
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
-  public createdAt: DateTime
+  public created_at: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
-  public updatedAt: DateTime
+  public updated_at: DateTime
 }

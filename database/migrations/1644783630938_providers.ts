@@ -14,8 +14,20 @@ export default class Providers extends BaseSchema {
       table.boolean('is_mei').notNullable().defaultTo(false)
       table.boolean('is_me').notNullable().defaultTo(false)
 
+      table
+        .uuid('user_id')
+        .references('id')
+        .inTable('users')
+        .notNullable()
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+        .index('index_provider_user_id')
+
+      table.boolean('is_deleted').notNullable().defaultTo(false)
+
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
+      table.timestamp('deleted_at', { useTz: true }).nullable()
     })
   }
 

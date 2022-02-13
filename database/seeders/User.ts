@@ -12,10 +12,11 @@ export default class UserSeeder extends BaseSeeder {
 
       const root = await Role.findBy('name', 'root')
       const admin = await Role.findBy('name', 'admin')
+      const provider = await Role.findBy('name', 'provider')
       const user = await Role.findBy('name', 'user')
       const guest = await Role.findBy('name', 'guest')
 
-      if (admin && root && user && guest)
+      if (admin && root && provider && user && guest)
         await User.createMany([
           {
             firstname: 'Root',
@@ -23,7 +24,7 @@ export default class UserSeeder extends BaseSeeder {
             email: 'root@iecare.com.br',
             username: 'root',
             password: 'iecare@551238',
-            roleId: root.id,
+            role_id: root.id,
           },
           {
             firstname: 'Admin',
@@ -31,7 +32,15 @@ export default class UserSeeder extends BaseSeeder {
             email: 'admin@iecare.com.br',
             username: 'admin',
             password: 'iecare@551238',
-            roleId: admin.id,
+            role_id: admin.id,
+          },
+          {
+            firstname: 'Alvaro',
+            lastname: 'Kenzo',
+            email: 'alvaro.kenzo@iecare.com.br',
+            username: 'alvaro.kenzo',
+            password: 'iecare@551238',
+            role_id: provider.id,
           },
           {
             firstname: 'Gabriel',
@@ -39,7 +48,7 @@ export default class UserSeeder extends BaseSeeder {
             email: 'gabriel.maia@iecare.com.br',
             username: 'gabriel.maia',
             password: 'iecare@551238',
-            roleId: user.id,
+            role_id: user.id,
           },
           {
             firstname: 'Guest',
@@ -47,7 +56,7 @@ export default class UserSeeder extends BaseSeeder {
             email: 'guest@iecare.com.br',
             username: 'guest',
             password: 'iecare@551238',
-            roleId: guest.id,
+            role_id: guest.id,
           },
         ])
     } catch (err) {

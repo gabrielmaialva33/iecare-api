@@ -12,6 +12,11 @@ export const RoleDefaults: RoleType[] = [
     description: 'admin system',
   },
   {
+    slug: 'Provider',
+    name: 'provider',
+    description: 'a provider user system',
+  },
+  {
     slug: 'User',
     name: 'user',
     description: 'a common user system',

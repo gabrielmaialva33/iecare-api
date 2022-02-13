@@ -13,11 +13,14 @@ import {
   computed,
   hasOne,
   HasOne,
+  hasMany,
+  HasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Hash from '@ioc:Adonis/Core/Hash'
 import Role from 'App/Modules/User/Models/Role'
 import Profile from 'App/Modules/User/Models/Profile'
+import Provider from 'App/Modules/Provider/Models/Provider'
 
 export default class User extends BaseModel {
   public static table: string = 'users'
@@ -47,28 +50,28 @@ export default class User extends BaseModel {
   public password: string
 
   @column()
-  public rememberMeToken?: string
+  public remember_me_token?: string
 
   @column({ serializeAs: null })
-  public roleId: string
+  public role_id: string
 
   @column()
-  public isOnline: boolean
+  public is_online: boolean
 
   @column({ serializeAs: null })
-  public isBlocked: boolean
+  public is_blocked: boolean
 
   @column({ serializeAs: null })
-  public isDeleted: boolean
+  public is_deleted: boolean
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
-  public createdAt: DateTime
+  public created_at: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
-  public updatedAt: DateTime
+  public updated_at: DateTime
 
   @column.dateTime({ serializeAs: null })
-  public deletedAt: DateTime
+  public deleted_at: DateTime
 
   /**
    * ------------------------------------------------------
@@ -98,6 +101,9 @@ export default class User extends BaseModel {
   @hasOne(() => Profile, { localKey: 'id', foreignKey: 'user_id' })
   public profile: HasOne<typeof Profile>
 
+  @hasMany(() => Provider, { localKey: 'id', foreignKey: 'user_id' })
+  public providers: HasMany<typeof Provider>
+
   /**
    * ------------------------------------------------------
    * Hooks
@@ -112,15 +118,15 @@ export default class User extends BaseModel {
 
   @beforeCreate()
   public static async attachDefaultRole(user: User): Promise<void> {
-    if (!user.roleId) {
+    if (!user.role_id) {
       const userRole = await Role.findBy('name', 'user')
-      if (userRole) user.roleId = userRole.id
+      if (userRole) user.role_id = userRole.id
     }
   }
 
   @afterCreate()
   public static async attachRoleUser(user: User): Promise<void> {
-    if (user.roleId) await user.related('roles').attach([user.roleId])
+    if (user.role_id) await user.related('roles').attach([user.role_id])
   }
 
   @beforeCreate()

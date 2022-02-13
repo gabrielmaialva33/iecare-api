@@ -1,10 +1,10 @@
-import { BaseModel, BelongsTo, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import User from 'App/Modules/User/Models/User'
 
-export default class Profile extends BaseModel {
-  public static table: string = 'profiles'
+export default class Provider extends BaseModel {
+  public static table: string = 'providers'
 
   /**
    * ------------------------------------------------------
@@ -16,25 +16,25 @@ export default class Profile extends BaseModel {
   public id: string
 
   @column()
-  public avatarUrl: string
+  public name: string
 
   @column()
   public cellphone: string
 
   @column()
-  public cpf: string
+  public cnpj: string
 
   @column()
-  public rg: string
+  public is_mei: boolean
 
   @column()
-  public company: string
+  public is_me: boolean
 
   @column()
-  public role: string
+  public user_id: string
 
   @column({ serializeAs: null })
-  public user_id: string
+  public is_deleted: boolean
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
   public created_at: DateTime
@@ -42,29 +42,15 @@ export default class Profile extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updated_at: DateTime
 
+  @column.dateTime({ serializeAs: null })
+  public deleted_at: DateTime
+
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define Profile  model relationships
-   * */
+   * - define Provider model relationships
+   */
   @belongsTo(() => User, { localKey: 'id', foreignKey: 'user_id' })
   public user: BelongsTo<typeof User>
-
-  /**
-   * ------------------------------------------------------
-   * Query Scopes
-   * ------------------------------------------------------
-   */
-
-  public static searchQueryScope = scope((query, search) => {
-    const fields = ['cellphone', 'cpf', 'rg', 'company', 'role']
-    let sql = ''
-
-    fields.forEach((field, i) => {
-      sql = `${sql} ${i !== 0 ? ' or ' : ' '} ${field} like '%${search}%'`
-    })
-
-    return query.whereRaw(`(${sql})`)
-  })
 }
