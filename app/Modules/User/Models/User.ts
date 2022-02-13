@@ -10,6 +10,7 @@ import {
   beforeFind,
   beforeFetch,
   ModelQueryBuilderContract,
+  computed,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Hash from '@ioc:Adonis/Core/Hash'
@@ -65,6 +66,16 @@ export default class User extends BaseModel {
 
   @column.dateTime({ serializeAs: null })
   public deletedAt: DateTime
+
+  /**
+   * ------------------------------------------------------
+   * Computed
+   * ------------------------------------------------------
+   */
+  @computed()
+  public get fullname() {
+    return `${this.firstname} ${this.lastname}`
+  }
 
   /**
    * ------------------------------------------------------
