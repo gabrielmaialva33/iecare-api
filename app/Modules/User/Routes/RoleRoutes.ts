@@ -4,5 +4,6 @@ import RolesController from 'App/Modules/User/Controllers/Http/Admin/RolesContro
 Route.group(() => {
   Route.get('/roles', new RolesController().index).as('role.index')
   Route.get('/roles/:id', new RolesController().show).as('role.show')
-}).prefix('admin')
-//.middleware(['auth', 'acl:root,admin'])
+})
+  .prefix('admin')
+  .middleware(['auth', 'acl:root,admin'])

@@ -18,4 +18,11 @@ export default class RolesRepository implements IRole.Repository {
   public async show(roleId: string): Promise<Role | null> {
     return this.orm.query().where({ id: roleId }).first()
   }
+
+  /**
+   * Helpers
+   */
+  public async findBy(key: string, value: any): Promise<Role | null> {
+    return this.orm.findBy(key, value)
+  }
 }

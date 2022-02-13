@@ -33,3 +33,8 @@ Route.get('/', async ({ response }: HttpContextContract) => {
  * Role Routes
  */
 import 'App/Modules/User/Routes/RoleRoutes'
+
+/**
+ * User Routes
+ */
+import 'App/Modules/User/Routes/UserRoutes'

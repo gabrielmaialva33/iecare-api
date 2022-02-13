@@ -11,7 +11,7 @@ export default class RolesController {
 
     const listRoles = container.resolve(ListRoleService)
     const roles = await listRoles.execute(Number(page), Number(perPage))
-8ade4104=92-99b1-553e69cd3c59
+
     return response.json(roles)
   }
 
