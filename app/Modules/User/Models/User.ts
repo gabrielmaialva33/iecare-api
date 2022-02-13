@@ -96,7 +96,7 @@ export default class User extends BaseModel {
   public roles: ManyToMany<typeof Role>
 
   @hasOne(() => Profile, { localKey: 'id', foreignKey: 'user_id' })
-  public account_setting: HasOne<typeof Profile>
+  public profile: HasOne<typeof Profile>
 
   /**
    * ------------------------------------------------------

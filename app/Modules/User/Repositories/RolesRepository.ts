@@ -1,6 +1,7 @@
+import { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
+
 import { IRole } from 'App/Modules/User/Interfaces/IRole'
 import Role from 'App/Modules/User/Models/Role'
-import { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 
 export default class RolesRepository implements IRole.Repository {
   private orm: typeof Role

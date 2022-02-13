@@ -1,4 +1,4 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import User from 'App/Modules/User/Models/User'
@@ -33,8 +33,8 @@ export default class Profile extends BaseModel {
   @column()
   public role: string
 
-  @column({})
-  public userId: string
+  @column({ serializeAs: null })
+  public user_id: string
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
@@ -50,4 +50,21 @@ export default class Profile extends BaseModel {
    * */
   @belongsTo(() => User, { localKey: 'id', foreignKey: 'user_id' })
   public user: BelongsTo<typeof User>
+
+  /**
+   * ------------------------------------------------------
+   * Query Scopes
+   * ------------------------------------------------------
+   */
+
+  public static searchQueryScope = scope((query, search) => {
+    const fields = ['cellphone', 'cpf', 'rg', 'company', 'role']
+    let sql = ''
+
+    fields.forEach((field, i) => {
+      sql = `${sql} ${i !== 0 ? ' or ' : ' '} ${field} like '%${search}%'`
+    })
+
+    return query.whereRaw(`(${sql})`)
+  })
 }
