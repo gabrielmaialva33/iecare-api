@@ -1,0 +1,24 @@
+steps:
+  # Install node.js dependencies
+  - name: node
+    entrypoint: npm
+    args: ["install"]
+  # Fetch environment variables from storage
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      [
+        "cp",
+        "gs://crudecoding.appspot.com/deployment-files/${_ENV}.env",
+        ".env",
+      ]
+  # Run build script
+  - name: node
+    entrypoint: node
+    args: ["ace", "build", "--production"]
+  # Copy app.yaml into build folder
+  - name: gcr.io/cloud-builders/gsutil
+    args: ["cp", "app.yaml", "build/app.yaml"]
+  # Deploy application
+  - name: "gcr.io/cloud-builders/gcloud"
+    dir: "build"
+    args: ["app", "deploy"]
