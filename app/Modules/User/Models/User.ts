@@ -11,10 +11,13 @@ import {
   beforeFetch,
   ModelQueryBuilderContract,
   computed,
+  hasOne,
+  HasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Hash from '@ioc:Adonis/Core/Hash'
 import Role from 'App/Modules/User/Models/Role'
+import Profile from 'App/Modules/User/Models/Profile'
 
 export default class User extends BaseModel {
   public static table: string = 'users'
@@ -91,6 +94,10 @@ export default class User extends BaseModel {
     pivotTable: 'roles_users',
   })
   public roles: ManyToMany<typeof Role>
+
+  @hasOne(() => Profile, { localKey: 'id', foreignKey: 'user_id' })
+  public account_setting: HasOne<typeof Profile>
+
   /**
    * ------------------------------------------------------
    * Hooks

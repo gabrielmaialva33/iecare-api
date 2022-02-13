@@ -8,7 +8,7 @@ export namespace UserValidators {
     public schema = schema.create({
       firstname: schema.string({ trim: true, escape: true }, [rules.maxLength(80)]),
       lastname: schema.string({ trim: true, escape: true }, [rules.maxLength(80)]),
-      username: schema.string({ trim: true }, [
+      username: schema.string.optional({ trim: true }, [
         rules.unique({ table: 'users', column: 'username' }),
         rules.minLength(4),
         rules.maxLength(80),

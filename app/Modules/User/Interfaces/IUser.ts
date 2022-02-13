@@ -25,7 +25,7 @@ export namespace IUser {
       firstname: string
       lastname: string
       email: string
-      username: string
+      username?: string
       password: string
     }
 
