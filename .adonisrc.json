@@ -30,7 +30,8 @@
     "./providers/AppProvider",
     "@adonisjs/core",
     "@adonisjs/lucid",
-    "@adonisjs/redis"
+    "@adonisjs/redis",
+    "@adonisjs/auth"
   ],
   "aceProviders": [
     "@adonisjs/repl"

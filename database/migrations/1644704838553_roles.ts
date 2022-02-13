@@ -9,8 +9,8 @@ export default class Roles extends BaseSchema {
       this.schema.createTable(this.tableName, (table) => {
         table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
-        table.string('slug', 100).notNullable()
-        table.string('name', 100).notNullable().unique()
+        table.string('slug', 100).notNullable().index('index_role_slug')
+        table.string('name', 100).notNullable().unique().index('index_role_name')
         table.string('description', 100).notNullable()
         table.jsonb('permissions').defaultTo('{}')
 
