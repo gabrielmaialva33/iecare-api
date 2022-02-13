@@ -11,7 +11,7 @@ export default class Roles extends BaseSchema {
 
         table.string('slug', 100).notNullable().index('index_role_slug')
         table.string('name', 100).notNullable().unique().index('index_role_name')
-        table.string('description', 100).notNullable()
+        table.text('description').notNullable()
         table.jsonb('permissions').defaultTo('{}')
 
         table.timestamp('created_at', { useTz: true })
