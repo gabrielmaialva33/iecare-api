@@ -1,0 +1,29 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d58cc04a31
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d535d0f5fb
+modified: 1667667519428
+created: 1667667519428
+url: "{{ base_url }}/sign_in"
+name: Sign In
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "uid": "root",
+      "password": "123456"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1667667519428
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

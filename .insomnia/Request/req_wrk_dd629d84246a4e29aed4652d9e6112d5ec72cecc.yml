@@ -1,0 +1,36 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d5ec72cecc
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d59f8a2389
+modified: 1667667519425
+created: 1667667519425
+url: "{{ base_url }}/users"
+name: Store user
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john@email.com",
+      "user_name": "john",
+      "password": "john1234",
+      "confirm_password": "john1234"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519425
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

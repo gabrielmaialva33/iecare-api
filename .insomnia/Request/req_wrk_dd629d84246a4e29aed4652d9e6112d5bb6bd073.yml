@@ -1,0 +1,39 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d5bb6bd073
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d59f8a2389
+modified: 1667667519426
+created: 1667667519426
+url: "{{ base_url }}/users"
+name: List users
+description: ""
+method: GET
+body: {}
+parameters:
+  - name: page
+    disabled: true
+    value: "1"
+  - name: per_page
+    disabled: true
+    value: "10"
+  - name: search
+    disabled: true
+    value: first_name
+  - name: sort
+    disabled: true
+    value: id
+  - name: order
+    disabled: true
+    value: asc
+headers: []
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519426
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

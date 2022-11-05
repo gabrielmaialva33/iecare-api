@@ -1,0 +1,896 @@
+_id: spc_1980e26be4ea48c08aad01343ba1b7f5
+type: ApiSpec
+parentId: wrk_dd629d84246a4e29aed4652d9e6112d5
+modified: 1667667552367
+created: 1667667406076
+fileName: iecare-api
+contents: >+
+  openapi: 3.0.3
+
+  info:
+    version: 1.0.0
+    title: IECare API
+    description: 'This is a simple Acl API built with Fiber'
+    contact:
+      name: Maia
+      email: gabrielmaialva33@gmail.com
+      url: github.com/gabrielmaialva33
+  servers:
+    - url: http://127.0.0.1:3333
+  paths:
+    /sign_in:
+      post:
+        tags:
+          - Auth
+        summary: Sign In
+        description: 'Sign in user into the system'
+        operationId: SignInUser
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignIn'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SignInSuccess'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '401':
+            description: Invalid credentials
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Unauthorized'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+    /sign_up:
+      post:
+        tags:
+          - Auth
+        summary: SignUp
+        description: 'Sign up user into the system'
+        operationId: SignUpUser
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+        responses:
+          '201':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SignInSuccess'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+
+
+    # authorization routes
+    /users:
+      get:
+        tags:
+          - User
+        summary: List users
+        description: 'Get all users from the system'
+        operationId: ListUsers
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: page
+            in: query
+            description: Page number
+            required: false
+            schema:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 100
+              default: 1
+          - name: per_page
+            in: query
+            description: Number of users per page
+            required: false
+            schema:
+              type: integer
+              format: int32
+              default: 10
+              minimum: 1
+          - name: search
+            in: query
+            description: Search by public user attributes
+            required: false
+            schema:
+              type: string
+              default: 'first_name'
+          - name: sort
+            in: query
+            description: Sort by public user attributes
+            required: false
+            schema:
+              type: string
+              default: 'id'
+          - name: order
+            in: query
+            description: Order by public user attributes
+            required: false
+            schema:
+              type: string
+              default: 'asc'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListUsers'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+      post:
+        tags:
+          - User
+        summary: Store user
+        description: 'Store user into the system'
+        operationId: StoreUser
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+        responses:
+          '201':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicUser'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+    /users/{userId}:
+      get:
+        tags:
+          - User
+        summary: Get user
+        description: 'Get user by id'
+        operationId: GetUser
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: userId
+            in: path
+            description: User id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicUser'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+      put:
+        tags:
+          - User
+        summary: Edit user
+        description: 'Edit user by id'
+        operationId: EditUser
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: userId
+            in: path
+            description: User id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditUser'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicUser'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+      delete:
+        tags:
+          - User
+        summary: Delete user
+        description: 'Delete user by id'
+        operationId: DeleteUser
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: userId
+            in: path
+            description: User id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '204':
+            description: successful operation
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+
+    /roles:
+      get:
+        tags:
+          - Role
+        summary: List roles
+        description: 'Get all roles from the system'
+        operationId: ListRoles
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: page
+            in: query
+            description: Page number
+            required: false
+            schema:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 100
+              default: 1
+          - name: per_page
+            in: query
+            description: Number of roles per page
+            required: false
+            schema:
+              type: integer
+              format: int32
+              default: 10
+              minimum: 1
+          - name: search
+            in: query
+            description: Search by public role attributes
+            required: false
+            schema:
+              type: string
+              default: 'name'
+          - name: sort
+            in: query
+            description: Sort by public role attributes
+            required: false
+            schema:
+              type: string
+              default: 'id'
+          - name: order
+            in: query
+            description: Order by public role attributes
+            required: false
+            schema:
+              type: string
+              default: 'asc'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListRoles'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+      post:
+        tags:
+          - Role
+        summary: Store role
+        description: 'Store role into the system'
+        operationId: StoreRole
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreRole'
+        responses:
+          '201':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicRole'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+    /roles/{roleId}:
+      get:
+        tags:
+          - Role
+        summary: Get role
+        description: 'Get role by id'
+        operationId: GetRole
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: roleId
+            in: path
+            description: Role id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicRole'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Role not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+      put:
+        tags:
+          - Role
+        summary: Edit role
+        description: 'Edit role by id'
+        operationId: EditRole
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: roleId
+            in: path
+            description: Role id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditRole'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicRole'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Role not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+      delete:
+        tags:
+          - Role
+        summary: Delete role
+        description: 'Delete role by id'
+        operationId: DeleteRole
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: roleId
+            in: path
+            description: Role id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '204':
+            description: successful operation
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Role not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+
+    /files:
+      post:
+        tags:
+          - File
+        summary: Store files
+        description: 'Store file into the system'
+        operationId: StoreFile
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Files'
+
+  tags:
+    - name: Auth
+      description: Operations about auth
+    - name: User
+      description: Operations about user
+    - name: Role
+      description: Operations about role\
+    - name: File
+      description: Operations about file
+
+  components:
+    securitySchemes:
+      bearerToken:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+    responses:
+      '200':
+        description: OK
+      '401':
+        description: Unauthorized
+      '422':
+        description: Unprocessable Entity
+      '404':
+        description: Not Found
+    schemas:
+      # Entities
+      PublicUser:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          first_name:
+            type: string
+          last_name:
+            type: string
+          email:
+            type: string
+          user_name:
+            type: string
+          roles:
+            type: array
+            items:
+              $ref: '#/components/schemas/PublicRole'
+        example:
+          id: 'bd7661b5-6ea6-49cc-abd8-49f110f4de27'
+          first_name: John
+          last_name: Doe
+          email: john@email.com
+          user_name: john
+          roles:
+            - id: 'b3d6dfdf-e849-4d12-b515-ac5769b4f28e'
+              name: admin
+              description: Admin role
+              created_at: '2020-10-10 10:10:10'
+              updated_at: '2020-10-10 10:10:10'
+      PublicRole:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          name:
+            type: string
+          description:
+            type: string
+        example:
+          id: 'f9480b4b-2559-4d82-8a98-703b8f97c9e3'
+          name: Admin
+          description: Admin role
+      File:
+        type: object
+        properties:
+          filename:
+            type: string
+          original_filename:
+            type: string
+          format:
+            type: string
+          type:
+            type: string
+          size:
+            type: integer
+          url:
+            type: string
+        example:
+          filename: 'file-1602510000.jpg'
+          original_filename: 'file.jpg'
+          format: 'jpeg'
+          type: 'image'
+          size: 123456
+          url: 'https://example.com/file-1602510000.jpg'
+      Files:
+        type: array
+        items:
+          $ref: '#/components/schemas/File'
+
+      # Request Body Schemas
+      SignIn:
+        type: object
+        properties:
+          uid:
+            type: string
+          password:
+            type: string
+        example:
+          uid: root
+          password: '123456'
+      SignUp:
+        type: object
+        properties:
+          first_name:
+            type: string
+          last_name:
+            type: string
+          email:
+            type: string
+          user_name:
+            type: string
+          password:
+            type: string
+          confirm_password:
+            type: string
+        required:
+          - first_name
+          - last_name
+          - email
+          - user_name
+          - password
+          - confirm_password
+        example:
+          first_name: John
+          last_name: Doe
+          email: john@email.com
+          user_name: john
+          password: john1234
+          confirm_password: john1234
+      EditUser:
+        type: object
+        properties:
+          first_name:
+            type: string
+          last_name:
+            type: string
+          email:
+            type: string
+          user_name:
+            type: string
+        example:
+          first_name: John
+          last_name: Doe
+          email: john_doe@email.com
+          user_name: john_doe
+      StoreRole:
+        type: object
+        properties:
+          slug:
+            type: string
+          description:
+            type: string
+        required:
+          - slug
+          - description
+        example:
+          slug: New Role
+          description: New Role Description
+      EditRole:
+        type: object
+        properties:
+          slug:
+            type: string
+          description:
+            type: string
+        example:
+          slug: Edit Role
+          description: Edit Role Description
+
+      # Responses Schemas
+      Meta:
+        type: object
+        properties:
+          total:
+            type: number
+            format: int64
+          total_pages:
+            type: number
+            format: int64
+          per_page:
+            type: number
+            format: int64
+          current_page:
+            type: number
+            format: int64
+          search:
+            type: string
+          sort:
+            type: string
+          order:
+            type: string
+        example:
+          total: 1
+          total_pages: 1
+          per_page: 10
+          current_page: 1
+          search: ''
+          sort: 'id'
+          order: 'asc'
+      ListUsers:
+        type: object
+        properties:
+          meta:
+            $ref: '#/components/schemas/Meta'
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/PublicUser'
+      ListRoles:
+        type: object
+        properties:
+          meta:
+            $ref: '#/components/schemas/Meta'
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/PublicRole'
+
+      # Success Responses
+      SignInSuccess:
+        type: object
+        properties:
+          message:
+            type: string
+          status:
+            type: number
+            format: int64
+          display:
+            type: boolean
+          user:
+            $ref: '#/components/schemas/PublicUser'
+          token:
+            type: string
+        example:
+          display: false
+          message: Login successful
+          status: 200
+          token: token here
+          user:
+            id: 93d7ad22-87e0-41b4-8b90-745bd87fa9af
+            first_name: John
+            last_name: Doe
+            email: john@email.com
+            user_name: john
+            roles:
+              - id: 'f9480b4b-2559-4d82-8a98-703b8f97c9e3'
+                name: admin
+                description: Admin role
+
+      # Errors Responses
+      NotFound:
+        type: object
+        properties:
+          message:
+            type: string
+          status:
+            type: number
+            format: int64
+          error:
+            type: string
+          display:
+            type: boolean
+        example:
+          message: "User not found"
+          status: 404
+          error: "record not found"
+          display: true
+      BadRequest:
+        type: object
+        properties:
+          message:
+            type: string
+          status:
+            type: number
+            format: int64
+          error:
+            type: string
+          display:
+            type: boolean
+        example:
+          message: "Error while parsing data"
+          status: 400
+          error: "invalid character '}' looking for beginning of object key string"
+          display: false
+      Unauthorized:
+        type: object
+        properties:
+          message:
+            type: string
+          status:
+            type: number
+            format: int64
+          display:
+            type: boolean
+        example:
+          message: "Invalid credentials"
+          status: 401
+          display: true
+      UnprocessableEntity:
+        type: object
+        properties:
+          message:
+            type: string
+          status:
+            type: number
+            format: int64
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                failed_field:
+                  type: string
+                tag:
+                  type: string
+                field:
+                  type: string
+                value:
+                  type: string
+                param:
+                  type: string
+                message:
+                  type: string
+          display:
+            type: boolean
+        example:
+          message: "Validation failed"
+          status: 422
+          errors:
+            - failed_field: "email"
+              tag: "email"
+              field: "email"
+              value: "john@email"
+              param: ""
+              message: "email must be a valid email"
+          display: true
+
+
+
+contentType: yaml

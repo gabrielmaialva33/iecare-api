@@ -1,0 +1,34 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d5eb7f1eda
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d59f8a2389
+modified: 1667667519422
+created: 1667667519422
+url: "{{ base_url }}/users/{{ userId }}"
+name: Edit user
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john_doe@email.com",
+      "user_name": "john_doe"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519422
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

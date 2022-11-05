@@ -1,0 +1,24 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d557ad4857
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d5c3f104d1
+modified: 1667667519415
+created: 1667667519415
+url: "{{ base_url }}/roles/{{ roleId }}"
+name: Delete role
+description: ""
+method: DELETE
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519415
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

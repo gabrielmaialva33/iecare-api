@@ -1,0 +1,25 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d523f683bb
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d52c3cafa4
+modified: 1667667519414
+created: 1667667519414
+url: "{{ base_url }}/files"
+name: Store files
+description: ""
+method: POST
+body:
+  mimeType: multipart/form-data
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519414
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

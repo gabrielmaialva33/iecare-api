@@ -1,0 +1,32 @@
+_id: req_wrk_dd629d84246a4e29aed4652d9e6112d55111b9cf
+type: Request
+parentId: fld_wrk_dd629d84246a4e29aed4652d9e6112d5c3f104d1
+modified: 1667667519416
+created: 1667667519416
+url: "{{ base_url }}/roles/{{ roleId }}"
+name: Edit role
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "slug": "Edit Role",
+      "description": "Edit Role Description"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: "{{bearerToken}}"
+  prefix: ""
+metaSortKey: -1667667519416
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
