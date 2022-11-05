@@ -1,6 +1,5 @@
 .idea
 golib
 .env
-database
 public/uploads/*
 .DS_Store
