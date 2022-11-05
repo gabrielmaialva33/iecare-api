@@ -72,7 +72,7 @@ Os seguintes softwares devem estar instalados:
 ### :arrow_down: **Clonando o repositório**
 
 ```sh
-  $ git clone https://github.com/gabrielmaialva33/base-acl-api.git
+  $ git clone https://github.com/gabrielmaialva33/iecare-api.git
 ```
 
 <br>

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   version: 1.0.0
   title: IECare API
-  description: 'This is a simple acl API built with Fiber'
+  description: 'This is a simple Acl API built with Fiber'
   contact:
     name: Maia
     email: gabrielmaialva33@gmail.com
