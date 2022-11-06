@@ -34,7 +34,7 @@
 
 ## :bookmark: About
 
-**Base Fiber API ** is an access control list base api that hopes to serve many projects written in Go.
+**IECare API ** is an access control list base api that hopes to serve many projects written in Go.
 
 <kbd>
   <img src=".github/assets/schema.svg" alt="schema">
