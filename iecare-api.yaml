@@ -782,9 +782,14 @@ components:
         id:
           type: string
           format: uuid
+        avatar:
+          type: string
+          format: uri
         first_name:
           type: string
         last_name:
+          type: string
+        full_name:
           type: string
         email:
           type: string
@@ -838,6 +843,8 @@ components:
         banner:
           type: string
           format: uri
+        user:
+          $ref: '#/components/schemas/PublicUser'
       example:
         id: 5b61f3db-675e-4e88-a848-5c15f1113750
         name: Provider
@@ -846,7 +853,18 @@ components:
         phone: '123456789'
         logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
         banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
-
+        user:
+          id: b9dba5a9-5948-4b80-8530-e7e4fe0c2408
+          avatar: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+          first_name: John
+          last_name: Doe
+          full_name: John Doe
+          email: john@email.com
+          user_name: john
+          roles:
+            - id: 97b67915-5c0e-4bcf-9e9a-b9afbc4b0182
+              name: admin
+              description: Admin role
     File:
       type: object
       properties:
