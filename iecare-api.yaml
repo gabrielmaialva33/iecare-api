@@ -87,7 +87,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnprocessableEntity'
 
-
   # authorization routes
   /users:
     get:
@@ -511,6 +510,217 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
 
+  /providers:
+    get:
+      tags:
+        - Provider
+      summary: List providers
+      description: 'Get all providers from the system'
+      operationId: ListProviders
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 1
+        - name: per_page
+          in: query
+          description: Number of providers per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 1
+        - name: search
+          in: query
+          description: Search by public provider attributes
+          required: false
+          schema:
+            type: string
+            default: 'name'
+        - name: sort
+          in: query
+          description: Sort by public provider attributes
+          required: false
+          schema:
+            type: string
+            default: 'id'
+        - name: order
+          in: query
+          description: Order by public provider attributes
+          required: false
+          schema:
+            type: string
+            default: 'asc'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProviders'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    post:
+      tags:
+        - Provider
+      summary: Store provider
+      description: 'Store provider into the system'
+      operationId: StoreProvider
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProvider'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProvider'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /providers/{providerId}:
+    get:
+      tags:
+        - Provider
+      summary: Get provider
+      description: 'Get provider by id'
+      operationId: GetProvider
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: providerId
+          in: path
+          description: Provider id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProvider'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    put:
+      tags:
+        - Provider
+      summary: Edit provider
+      description: 'Edit provider by id'
+      operationId: EditProvider
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: providerId
+          in: path
+          description: Provider id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditProvider'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProvider'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+    delete:
+      tags:
+        - Provider
+      summary: Delete provider
+      description: 'Delete provider by id'
+      operationId: DeleteProvider
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: providerId
+          in: path
+          description: Provider id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: successful operation
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+
   /files:
     post:
       tags:
@@ -543,7 +753,9 @@ tags:
   - name: User
     description: Operations about user
   - name: Role
-    description: Operations about role\
+    description: Operations about role
+  - name: Provider
+    description: Operations about provider
   - name: File
     description: Operations about file
 
@@ -583,17 +795,15 @@ components:
           items:
             $ref: '#/components/schemas/PublicRole'
       example:
-        id: 'bd7661b5-6ea6-49cc-abd8-49f110f4de27'
+        id: bd7661b5-6ea6-49cc-abd8-49f110f4de27
         first_name: John
         last_name: Doe
         email: john@email.com
         user_name: john
         roles:
-          - id: 'b3d6dfdf-e849-4d12-b515-ac5769b4f28e'
+          - id: b3d6dfdf-e849-4d12-b515-ac5769b4f28e
             name: admin
             description: Admin role
-            created_at: '2020-10-10 10:10:10'
-            updated_at: '2020-10-10 10:10:10'
     PublicRole:
       type: object
       properties:
@@ -605,9 +815,38 @@ components:
         description:
           type: string
       example:
-        id: 'f9480b4b-2559-4d82-8a98-703b8f97c9e3'
+        id: f9480b4b-2559-4d82-8a98-703b8f97c9e3
         name: Admin
         description: Admin role
+    PublicProvider:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        logo:
+          type: string
+          format: uri
+        banner:
+          type: string
+          format: uri
+      example:
+        id: 5b61f3db-675e-4e88-a848-5c15f1113750
+        name: Provider
+        description: Provider description
+        email: provider@email.com
+        phone: '123456789'
+        logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+        banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+
     File:
       type: object
       properties:
@@ -629,7 +868,7 @@ components:
         format: 'jpeg'
         type: 'image'
         size: 123456
-        url: 'https://example.com/file-1602510000.jpg'
+        url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
     Files:
       type: array
       items:
@@ -644,7 +883,7 @@ components:
         password:
           type: string
       example:
-        uid: root
+        uid: maia@iecare.com
         password: '123456'
     SignUp:
       type: object
@@ -675,6 +914,7 @@ components:
         user_name: john
         password: john1234
         confirm_password: john1234
+        avatar: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
     EditUser:
       type: object
       properties:
@@ -691,6 +931,7 @@ components:
         last_name: Doe
         email: john_doe@email.com
         user_name: john_doe
+    # Roles
     StoreRole:
       type: object
       properties:
@@ -714,6 +955,60 @@ components:
       example:
         slug: Edit Role
         description: Edit Role Description
+    # Providers
+    StoreProvider:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        website:
+          type: string
+        logo:
+          type: string
+        banner:
+          type: string
+      required:
+        - name
+        - description
+      example:
+        name: Provider Name
+        description: Provider Description
+        email: provider@email.com
+        phone: '123456789'
+        website: 'https://www.google.com/'
+        logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+        banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+    EditProvider:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        website:
+          type: string
+        logo:
+          type: string
+        banner:
+          type: string
+      example:
+        name: Provider Name
+        description: Provider Description
+        email: provider@email.com
+        phone: '123456789'
+        website: 'https://example.com'
+        logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+        banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
 
     # Responses Schemas
     Meta:
@@ -763,6 +1058,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PublicRole'
+    ListProviders:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicProvider'
 
     # Success Responses
     SignInSuccess:
@@ -791,7 +1095,7 @@ components:
           email: john@email.com
           user_name: john
           roles:
-            - id: 'f9480b4b-2559-4d82-8a98-703b8f97c9e3'
+            - id: f9480b4b-2559-4d82-8a98-703b8f97c9e3
               name: admin
               description: Admin role
 
