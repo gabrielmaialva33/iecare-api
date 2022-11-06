@@ -41,5 +41,5 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            ./bin/iecare & exit 0
+            screen -dmS iecare ./bin/iecare && disown
           '
