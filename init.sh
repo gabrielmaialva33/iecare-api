@@ -1,0 +1,1 @@
+nohup bash -c "bin/iecare" > /dev/null 2>&1 & echo $! > iecare.pid

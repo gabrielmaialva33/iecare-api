@@ -1,1 +1,0 @@
-nohup ./bin/iecare & > iecare.log
