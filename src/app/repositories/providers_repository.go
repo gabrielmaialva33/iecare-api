@@ -37,7 +37,7 @@ func (p *ProviderRepo) List(meta pagination2.Meta) (*pagination2.Pagination, err
 
 func (p *ProviderRepo) Get(id string) (*models.Provider, error) {
 	var provider models.Provider
-	if err := p.db.Preload("User").Where("id = ?", id).First(&provider).Error; err != nil {
+	if err := p.db.Preload("User").Preload("User.Roles").Where("id = ?", id).First(&provider).Error; err != nil {
 		return nil, err
 	}
 	return &provider, nil

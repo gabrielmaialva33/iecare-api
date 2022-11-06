@@ -23,7 +23,7 @@ func main() {
 	services.Seed()
 
 	app := fiber.New(fiber.Config{
-		AppName:                 "Base Fiber API",
+		AppName:                 "IECare API",
 		EnableTrustedProxyCheck: true,
 		TrustedProxies:          []string{"0.0.0.0"},
 		ProxyHeader:             fiber.HeaderXForwardedFor,

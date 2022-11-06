@@ -68,7 +68,7 @@ func (p *ProvidersController) Get(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(provider)
+	return c.JSON(provider.PublicProvider())
 }
 
 func (p *ProvidersController) Store(c *fiber.Ctx) error {

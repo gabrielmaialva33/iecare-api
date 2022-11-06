@@ -1,0 +1,46 @@
+name: Deploy in EC2
+env:
+  PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY  }}
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy in EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY  }}
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-18-231-81-178.sa-east-1.compute.amazonaws.com '
+            DIR="/home/ubuntu/iecare-api"
+            cd /home/ubuntu
+            source ~/.profile &&
+            source ~/.bashrc &&
+            export PATH="/usr/local/go/bin:$PATH" &&
+            export GOROOT="/usr/local/go" &&
+            pkill -9 -x iecare
+            if [ ! -d $DIR ]
+            then
+              mkdir iecare-api &&
+              git clone https://github.com/gabrielmaialva33/iecare-api.git iecare-api &&
+              cd iecare-api && go build -o bin/server src/cmd/main.go
+            else
+              cd iecare-api
+            fi
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            go build -o bin/iecare src/cmd/main.go &&
+            sudo systemctl restart iecare && 
+            echo "Deployed successfully"
+          '
