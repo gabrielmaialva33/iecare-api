@@ -21,11 +21,12 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ubuntu@ec2-18-231-81-178.sa-east-1.compute.amazonaws.com '
-            #Now we have got the access of EC2 and we will start the deploy .
-            source ~/.profile
-            source ~/.bashrc
             DIR="/home/ubuntu/iecare-api"
             cd /home/ubuntu
+            source ~/.profile &&
+            source ~/.bashrc &&
+            export PATH="/usr/local/go/bin:$PATH" &&
+            export GOROOT="/usr/local/go" &&
             if [ ! -d $DIR ]
             then
               mkdir iecare-api &&
