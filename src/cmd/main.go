@@ -46,8 +46,7 @@ func main() {
 
 	// Routes
 	app.Get("/", monitor.New(monitor.Config{
-		Title:   "IECare API",
-		Refresh: 1,
+		Title: "IECare API",
 	}))
 
 	app.Get("/database", func(c *fiber.Ctx) error {
