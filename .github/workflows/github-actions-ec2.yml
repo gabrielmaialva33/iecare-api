@@ -41,5 +41,5 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            ./bin/iecare && echo $! > iecare.pid
+            start-stop-daemon --start --quiet --pidfile /tmp/iecare.pid --make-pidfile --background --exec /home/ubuntu/iecare-api/bin/iecare
           '
