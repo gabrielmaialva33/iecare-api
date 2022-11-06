@@ -8,6 +8,7 @@ info:
     email: gabrielmaialva33@gmail.com
     url: github.com/gabrielmaialva33
 servers:
+  - url: https://iecare.api.mrootx.xyz/
   - url: http://127.0.0.1:3333
 paths:
   /sign_in:
