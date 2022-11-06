@@ -41,6 +41,7 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
+            sudo su -c "nohup /home/ubuntu/iecare-api/bin/iecare > /dev/null 2>&1 &"
             if [ ! -f /etc/systemd/system/iecare.service ]
             then
               echo "[Unit]
