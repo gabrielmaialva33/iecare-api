@@ -4,9 +4,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/joho/godotenv"
-	"iecare-api/src/app/modules/accounts/http/controllers"
-	"iecare-api/src/app/modules/accounts/http/routes"
+	"iecare-api/src/app/http/controllers"
+	"iecare-api/src/app/http/routes"
 	"iecare-api/src/database"
 	"os"
 )
@@ -35,9 +36,21 @@ func main() {
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization, X-Request-With",
 		AllowCredentials: true,
 	}))
+
 	app.Use(logger.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	// Controllers
+	userController := controllers.NewUsersController(services.User)
+	roleController := controllers.NewRolesController(services.Role)
+	providerController := controllers.NewProvidersController(services.Provider)
+
+	// Routes
+	app.Get("/", monitor.New(monitor.Config{
+		Title:   "IECare API",
+		Refresh: 1,
+	}))
+
+	app.Get("/database", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"message":  "Welcome to theIE Care API",
 			"status":   c.Response().StatusCode(),
@@ -45,13 +58,9 @@ func main() {
 		})
 	})
 
-	// Controllers
-	userController := controllers.NewUsersController(services.User)
-	roleController := controllers.NewRolesController(services.Role)
-
-	// Routes
 	routes.UserRoutes(app, userController)
 	routes.RoleRoutes(app, roleController)
+	routes.ProviderRoutes(app, providerController)
 	routes.FileRoutes(app)
 
 	_ = app.Listen(os.Getenv("HOST") + ":" + os.Getenv("PORT"))

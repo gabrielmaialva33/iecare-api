@@ -4,15 +4,16 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"iecare-api/src/app/modules/accounts/interfaces"
-	"iecare-api/src/app/modules/accounts/models"
-	"iecare-api/src/app/modules/accounts/repositories"
+	"iecare-api/src/app/interfaces"
+	"iecare-api/src/app/models"
+	"iecare-api/src/app/repositories"
 )
 
 type Repositories struct {
-	User interfaces.UserInterface
-	Role interfaces.RoleInterface
-	db   *gorm.DB
+	User     interfaces.UserInterface
+	Role     interfaces.RoleInterface
+	Provider interfaces.ProviderInterface
+	db       *gorm.DB
 }
 
 var DB *gorm.DB
@@ -28,15 +29,17 @@ func Connect(dsn string) *Repositories {
 	DB = database
 
 	return &Repositories{
-		User: repositories.NewUserRepository(database),
-		Role: repositories.NewRoleRepository(database),
-		db:   database,
+		User:     repositories.NewUserRepository(database),
+		Role:     repositories.NewRoleRepository(database),
+		Provider: repositories.NewProvidersRepository(database),
+		db:       database,
 	}
 }
 
 func (r *Repositories) Migrate() {
 	r.db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}); err != nil {
+
+	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}); err != nil {
 		panic(" -> Could not migrate the database")
 	}
 
@@ -48,7 +51,7 @@ func (r *Repositories) Migrate() {
 
 func (r *Repositories) Drop() {
 	r.db.Exec("DROP EXTENSION IF EXISTS \"uuid-ossp\" CASCADE;")
-	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{})
+	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{})
 	if err != nil {
 		panic(" -> Could not drop the database")
 	}
@@ -67,6 +70,11 @@ func (r *Repositories) Seed() {
 			Description: "An admin user has all permissions except root",
 		},
 		{
+			Name:        "provider",
+			Slug:        "Provider",
+			Description: "A provider user has all permissions except root and admin",
+		},
+		{
 			Name:        "user",
 			Slug:        "User",
 			Description: "A user has limited permissions",
@@ -82,7 +90,7 @@ func (r *Repositories) Seed() {
 		{
 			FirstName: "Root",
 			LastName:  "System",
-			Email:     "root@go.com",
+			Email:     "root@iecare.com",
 			UserName:  "root",
 			Password:  "123456",
 			Role:      models.RoleRoot,
@@ -90,15 +98,23 @@ func (r *Repositories) Seed() {
 		{
 			FirstName: "Admin",
 			LastName:  "System",
-			Email:     "admin@go.com",
+			Email:     "admin@iecare.com",
 			UserName:  "admin",
 			Password:  "123456",
 			Role:      models.RoleAdmin,
 		},
 		{
+			FirstName: "IECare",
+			LastName:  "System",
+			Email:     "iecare@iecare.com",
+			UserName:  "iecare",
+			Password:  "123456",
+			Role:      models.RoleProvider,
+		},
+		{
 			FirstName: "Gabriel",
 			LastName:  "Maia",
-			Email:     "maia@go.com",
+			Email:     "maia@iecare.com",
 			UserName:  "maia",
 			Password:  "123456",
 			Role:      models.RoleUser,
@@ -106,7 +122,7 @@ func (r *Repositories) Seed() {
 		{
 			FirstName: "Guest",
 			LastName:  "System",
-			Email:     "guest@go.com",
+			Email:     "guest@iecare.com",
 			UserName:  "guest",
 			Password:  "123456",
 			Role:      models.RoleGuest,
