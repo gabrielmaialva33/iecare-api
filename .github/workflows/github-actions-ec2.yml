@@ -41,5 +41,22 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            start-stop-daemon --start --quiet --pidfile /tmp/iecare.pid --make-pidfile --background --exec /home/ubuntu/iecare-api/bin/iecare --chuid ubuntu:ubuntu --startas /bin/bash -- -c "nohup /home/ubuntu/iecare-api/bin/iecare > /home/ubuntu/iecare-api/logs/iecare.log 2>&1 &" && echo "Deployed in EC2"
+            if [ ! -f /etc/systemd/system/iecare.service ]
+            then
+              echo "[Unit]
+              Description=iecare
+              After=network.target
+
+              [Service]
+              User=ubuntu
+              WorkingDirectory=/home/ubuntu/iecare-api
+              ExecStart=/home/ubuntu/iecare-api/bin/iecare
+              Restart=always
+              RestartSec=3
+              StartLimitInterval=0
+
+              [Install]
+              WantedBy=multi-user.target" > /etc/systemd/system/iecare.service
+            fi &&
+            systemctl daemon-reload && systemctl enable iecare && systemctl restart iecare && systemctl status iecare && echo "Deployed successfully"
           '
