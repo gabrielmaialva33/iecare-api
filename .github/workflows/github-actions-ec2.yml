@@ -41,7 +41,6 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            systemctl restart iecare && 
-            systemctl status iecare && 
+            sudo systemctl restart iecare && 
             echo "Deployed successfully"
           '
