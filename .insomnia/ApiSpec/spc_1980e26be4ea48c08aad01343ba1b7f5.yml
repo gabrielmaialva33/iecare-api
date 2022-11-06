@@ -1,7 +1,7 @@
 _id: spc_1980e26be4ea48c08aad01343ba1b7f5
 type: ApiSpec
 parentId: wrk_dd629d84246a4e29aed4652d9e6112d5
-modified: 1667731268552
+modified: 1667740624422
 created: 1667667406076
 fileName: iecare-api
 contents: >+
@@ -16,6 +16,7 @@ contents: >+
       email: gabrielmaialva33@gmail.com
       url: github.com/gabrielmaialva33
   servers:
+    - url: https://iecare.api.mrootx.xyz/
     - url: http://127.0.0.1:3333
   paths:
     /sign_in:
@@ -790,9 +791,14 @@ contents: >+
           id:
             type: string
             format: uuid
+          avatar:
+            type: string
+            format: uri
           first_name:
             type: string
           last_name:
+            type: string
+          full_name:
             type: string
           email:
             type: string
@@ -846,6 +852,8 @@ contents: >+
           banner:
             type: string
             format: uri
+          user:
+            $ref: '#/components/schemas/PublicUser'
         example:
           id: 5b61f3db-675e-4e88-a848-5c15f1113750
           name: Provider
@@ -854,7 +862,18 @@ contents: >+
           phone: '123456789'
           logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
           banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
-
+          user:
+            id: b9dba5a9-5948-4b80-8530-e7e4fe0c2408
+            avatar: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+            first_name: John
+            last_name: Doe
+            full_name: John Doe
+            email: john@email.com
+            user_name: john
+            roles:
+              - id: 97b67915-5c0e-4bcf-9e9a-b9afbc4b0182
+                name: admin
+                description: Admin role
       File:
         type: object
         properties:
