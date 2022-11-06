@@ -27,6 +27,7 @@ jobs:
             source ~/.bashrc &&
             export PATH="/usr/local/go/bin:$PATH" &&
             export GOROOT="/usr/local/go" &&
+            pkill -9 -x iecare
             if [ ! -d $DIR ]
             then
               mkdir iecare-api &&
@@ -39,6 +40,6 @@ jobs:
             git fetch --all &&
             git reset --hard origin/master &&
             git pull origin master &&
-            go build -o bin/server src/cmd/main.go &&
+            go build -o bin/iecare src/cmd/main.go &&
             go run src/cmd/main.go
           '
