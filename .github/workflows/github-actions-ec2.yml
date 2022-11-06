@@ -41,5 +41,5 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            nohup bash -c "bin/iecare" > /dev/null 2>&1 &
+            chmod +x init.sh && ./init.sh
           '
