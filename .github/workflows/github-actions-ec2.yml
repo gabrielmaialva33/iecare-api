@@ -41,5 +41,5 @@ jobs:
             git reset --hard origin/master &&
             git pull origin master &&
             go build -o bin/iecare src/cmd/main.go &&
-            screen -dmS iecare ./bin/iecare && echo $! > iecare.pid
+            ./bin/iecare && echo $! > iecare.pid
           '
