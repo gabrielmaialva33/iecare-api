@@ -1,7 +1,7 @@
 _id: env_env_4cb3cba931375ea3cb1615be7fb343a6b88a3d46_sub
 type: Environment
 parentId: env_4cb3cba931375ea3cb1615be7fb343a6b88a3d46
-modified: 1667740354013
+modified: 1667815079805
 created: 1667667519439
 name: OpenAPI env
 data:
@@ -18,6 +18,9 @@ data:
   providerId: "{% response 'body',
     'req_wrk_dd629d84246a4e29aed4652d9e6112d5e4976b83', 'b64::JC5pZA==::46b',
     'never', 60 %}"
+  categoryId: "{% response 'body',
+    'req_wrk_dd629d84246a4e29aed4652d9e6112d5687c2ce9',
+    'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
 dataPropertyOrder:
   "&":
     - scheme
@@ -27,6 +30,7 @@ dataPropertyOrder:
     - userId
     - roleId
     - providerId
+    - categoryId
 color: null
 isPrivate: false
 metaSortKey: 1667667519439

@@ -1,10 +1,10 @@
 _id: spc_1980e26be4ea48c08aad01343ba1b7f5
 type: ApiSpec
 parentId: wrk_dd629d84246a4e29aed4652d9e6112d5
-modified: 1667740624422
+modified: 1667815054994
 created: 1667667406076
 fileName: iecare-api
-contents: >+
+contents: >
   openapi: 3.0.3
 
   info:
@@ -19,6 +19,7 @@ contents: >+
     - url: https://iecare.api.mrootx.xyz/
     - url: http://127.0.0.1:3333
   paths:
+    # public routes
     /sign_in:
       post:
         tags:
@@ -96,7 +97,7 @@ contents: >+
                 schema:
                   $ref: '#/components/schemas/UnprocessableEntity'
 
-    # authorization routes
+    # users routes
     /users:
       get:
         tags:
@@ -308,6 +309,7 @@ contents: >+
                 schema:
                   $ref: '#/components/schemas/NotFound'
 
+    # roles routes
     /roles:
       get:
         tags:
@@ -519,6 +521,7 @@ contents: >+
                 schema:
                   $ref: '#/components/schemas/NotFound'
 
+    # providers routes
     /providers:
       get:
         tags:
@@ -730,6 +733,219 @@ contents: >+
                 schema:
                   $ref: '#/components/schemas/NotFound'
 
+    # categories routes
+    /categories:
+      get:
+        tags:
+          - Category
+        summary: List categories
+        description: 'Get all categories from the system'
+        operationId: ListCategories
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: page
+            in: query
+            description: Page number
+            required: false
+            schema:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 100
+              default: 1
+          - name: per_page
+            in: query
+            description: Number of categories per page
+            required: false
+            schema:
+              type: integer
+              format: int32
+              default: 10
+              minimum: 1
+          - name: search
+            in: query
+            description: Search by public category attributes
+            required: false
+            schema:
+              type: string
+              default: 'name'
+          - name: sort
+            in: query
+            description: Sort by public category attributes
+            required: false
+            schema:
+              type: string
+              default: 'id'
+          - name: order
+            in: query
+            description: Order by public category attributes
+            required: false
+            schema:
+              type: string
+              default: 'asc'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListCategories'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+      post:
+        tags:
+          - Category
+        summary: Store category
+        description: 'Store category into the system'
+        operationId: StoreCategory
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreCategory'
+        responses:
+          '201':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicCategory'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+    /categories/{categoryId}:
+      get:
+        tags:
+          - Category
+        summary: Get category
+        description: 'Get category by id'
+        operationId: GetCategory
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: categoryId
+            in: path
+            description: Category id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicCategory'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Category not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+      put:
+        tags:
+          - Category
+        summary: Edit category
+        description: 'Edit category by id'
+        operationId: EditCategory
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: categoryId
+            in: path
+            description: Category id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditCategory'
+        responses:
+          '200':
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PublicCategory'
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Category not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+          '422':
+            description: Unprocessable Entity
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnprocessableEntity'
+      delete:
+        tags:
+          - Category
+        summary: Delete category
+        description: 'Delete category by id'
+        operationId: DeleteCategory
+        security:
+          - bearerToken: [ ]
+        parameters:
+          - name: categoryId
+            in: path
+            description: Category id
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          '204':
+            description: successful operation
+          '400':
+            description: Bad request response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BadRequest'
+          '404':
+            description: Role not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/NotFound'
+
+    # files routes
     /files:
       post:
         tags:
@@ -765,6 +981,8 @@ contents: >+
       description: Operations about role
     - name: Provider
       description: Operations about provider
+    - name: Category
+      description: Operations about category
     - name: File
       description: Operations about file
 
@@ -874,6 +1092,23 @@ contents: >+
               - id: 97b67915-5c0e-4bcf-9e9a-b9afbc4b0182
                 name: admin
                 description: Admin role
+      PublicCategory:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          name:
+            type: string
+          description:
+            type: string
+          icon:
+            type: string
+        example:
+          id: 5b61f3db-675e-4e88-a848-5c15f1113750
+          name: Casa & Jardim
+          description: Casa & Jardim description
+          icon: 'home'
       File:
         type: object
         properties:
@@ -1036,6 +1271,36 @@ contents: >+
           website: 'https://example.com'
           logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
           banner: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+      # Categories
+      StoreCategory:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          icon:
+            type: string
+        required:
+          - name
+          - description
+        example:
+          name: Casa & Jardim
+          description: Casa & Jardim description
+          icon: 'home'
+      EditCategory:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          icon:
+            type: string
+        example:
+          name: Category Name
+          description: Category Description
+          icon: 'hammer'
 
       # Responses Schemas
       Meta:
@@ -1094,6 +1359,15 @@ contents: >+
             type: array
             items:
               $ref: '#/components/schemas/PublicProvider'
+      ListCategories:
+        type: object
+        properties:
+          meta:
+            $ref: '#/components/schemas/Meta'
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/PublicCategory'
 
       # Success Responses
       SignInSuccess:
@@ -1213,7 +1487,4 @@ contents: >+
               param: ""
               message: "email must be a valid email"
           display: true
-
-
-
 contentType: yaml
