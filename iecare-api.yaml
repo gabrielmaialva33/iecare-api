@@ -88,6 +88,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnprocessableEntity'
+  /:
+    get:
+      tags:
+        - Public
+      summary: Public
+      description: 'Public route'
+      operationId: Public
+      responses:
+        '200':
+          description: successful operation
+  /database:
+    get:
+      tags:
+        - Public
+      summary: Database
+      description: 'Database route'
+      operationId: Database
+      responses:
+        '200':
+          description: successful operation
 
   # users routes
   /users:
@@ -1175,7 +1195,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Files'
-
 tags:
   - name: Auth
     description: Operations about auth
@@ -1191,7 +1210,8 @@ tags:
     description: Operations about service
   - name: File
     description: Operations about file
-
+  - name: Public
+    description: Operations about public service
 components:
   securitySchemes:
     bearerToken:
