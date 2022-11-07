@@ -95,7 +95,8 @@ Os seguintes softwares devem estar instalados:
 
 ## :twisted_rightwards_arrows: Rotas
 
-Arquivo de rotas [Download](https://raw.githubusercontent.com/gabrielmaialva33/iecare-api/master/.github/assets/Insomnia.zip)
+Arquivo de
+rotas [Download](https://raw.githubusercontent.com/gabrielmaialva33/iecare-api/master/.github/assets/Insomnia.zip)
 
 ## :memo: Licença
 

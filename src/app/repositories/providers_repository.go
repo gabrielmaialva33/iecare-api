@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm/clause"
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/scopes"
 )
 
@@ -20,19 +20,19 @@ func NewProvidersRepository(db *gorm.DB) *ProviderRepo {
 
 var _ interfaces.ProviderInterface = &ProviderRepo{}
 
-func (p *ProviderRepo) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (p *ProviderRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var providers models.Providers
-	var paginate pagination2.Pagination
+	var pagination paginate.Pagination
 	var fields = []string{"name", "description", "email", "phone"}
 
 	if err := p.db.Preload(clause.Associations).Scopes(scopes.Paginate(providers, fields, &meta, p.db)).Find(&providers).Error; err != nil {
 		return nil, err
 	}
 
-	paginate.SetMeta(meta)
-	paginate.SetData(providers.PublicProviders())
+	pagination.SetMeta(meta)
+	pagination.SetData(providers.PublicProviders())
 
-	return &paginate, nil
+	return &pagination, nil
 }
 
 func (p *ProviderRepo) Get(id string) (*models.Provider, error) {
@@ -74,7 +74,7 @@ func (p *ProviderRepo) FindBy(field string, value string) (*models.Provider, err
 	return &provider, nil
 }
 
-func (p *ProviderRepo) FindManyBy(field []string, value string) (*models.Provider, error) {
+func (p *ProviderRepo) FindByMany(field []string, value string) (*models.Provider, error) {
 	var provider models.Provider
 	for _, v := range field {
 		p.db.Preload("User").Where(v+" = ?", value).First(&provider)

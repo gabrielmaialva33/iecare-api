@@ -13,6 +13,7 @@ type Repositories struct {
 	User     interfaces.UserInterface
 	Role     interfaces.RoleInterface
 	Provider interfaces.ProviderInterface
+	Category interfaces.CategoryInterface
 	db       *gorm.DB
 }
 
@@ -32,6 +33,7 @@ func Connect(dsn string) *Repositories {
 		User:     repositories.NewUserRepository(database),
 		Role:     repositories.NewRoleRepository(database),
 		Provider: repositories.NewProvidersRepository(database),
+		Category: repositories.NewCategoriesRepository(database),
 		db:       database,
 	}
 }
@@ -39,7 +41,7 @@ func Connect(dsn string) *Repositories {
 func (r *Repositories) Migrate() {
 	r.db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
-	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}); err != nil {
+	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{}); err != nil {
 		panic(" -> Could not migrate the database")
 	}
 
@@ -51,7 +53,7 @@ func (r *Repositories) Migrate() {
 
 func (r *Repositories) Drop() {
 	r.db.Exec("DROP EXTENSION IF EXISTS \"uuid-ossp\" CASCADE;")
-	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{})
+	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{})
 	if err != nil {
 		panic(" -> Could not drop the database")
 	}
@@ -85,7 +87,6 @@ func (r *Repositories) Seed() {
 			Description: "A guest user has no permissions",
 		},
 	}
-
 	users := []models.User{
 		{
 			FirstName: "Root",
@@ -128,9 +129,67 @@ func (r *Repositories) Seed() {
 			Role:      models.RoleGuest,
 		},
 	}
+	categories := []models.Category{
+		{
+			Name:        "Encanamento",
+			Description: "Tudo relacionado a encanamento",
+			Icon:        "shower",
+		},
+		{
+			Name:        "Elétrica",
+			Description: "Tudo relacionado a elétrica",
+			Icon:        "bolt",
+		},
+		{
+			Name:        "Pintura",
+			Description: "Tudo relacionado a pintura",
+			Icon:        "paint-brush",
+		},
+		{
+			Name:        "Jardinagem",
+			Description: "Tudo relacionado a jardinagem",
+			Icon:        "tree",
+		},
+		{
+			Name:        "Limpeza",
+			Description: "Tudo relacionado a limpeza",
+			Icon:        "broom",
+		},
+		{
+			Name:        "Marcenaria",
+			Description: "Tudo relacionado a marcenaria",
+			Icon:        "tools",
+		},
+		{
+			Name:        "Mecânica",
+			Description: "Tudo relacionado a mecânica",
+			Icon:        "car",
+		},
+		{
+			Name:        "Informática",
+			Description: "Tudo relacionado a informática",
+			Icon:        "laptop",
+		},
+		{
+			Name:        "Montagem",
+			Description: "Tudo relacionado a montagem",
+			Icon:        "wrench",
+		},
+		{
+			Name:        "Reformas",
+			Description: "Tudo relacionado a reformas",
+			Icon:        "hammer",
+		},
+		{
+			Name:        "Outros",
+			Description: "Outros serviços",
+			Icon:        "question",
+		},
+	}
 
 	r.db.Create(&roles)
 	r.db.Create(&users)
+	r.db.Create(&categories)
 }
 
 func (r *Repositories) Close() error {

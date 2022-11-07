@@ -96,7 +96,8 @@ The following software must be installed:
 
 ## :twisted_rightwards_arrows: Routes
 
-Get routes for insomnia [Download](https://raw.githubusercontent.com/gabrielmaialva33/iecare-api/master/.github/assets/Insomnia.zip)
+Get routes for
+insomnia [Download](https://raw.githubusercontent.com/gabrielmaialva33/iecare-api/master/.github/assets/Insomnia.zip)
 
 ## :memo: License
 

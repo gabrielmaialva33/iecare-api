@@ -3,7 +3,7 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	paginate "iecare-api/src/app/pkg/paginate"
 )
 
 type RoleServices struct {
@@ -16,7 +16,7 @@ type IRoleServices interface {
 
 var _ IRoleServices = &RoleServices{}
 
-func (r *RoleServices) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (r *RoleServices) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	return r.rr.List(meta)
 }
 
@@ -40,6 +40,6 @@ func (r *RoleServices) FindBy(field string, value string) (*models.Role, error) 
 	return r.rr.FindBy(field, value)
 }
 
-func (r *RoleServices) FindManyBy(field []string, value string) (*models.Role, error) {
-	return r.rr.FindManyBy(field, value)
+func (r *RoleServices) FindByMany(field []string, value string) (*models.Role, error) {
+	return r.rr.FindByMany(field, value)
 }

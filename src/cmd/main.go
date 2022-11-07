@@ -43,6 +43,7 @@ func main() {
 	userController := controllers.NewUsersController(services.User)
 	roleController := controllers.NewRolesController(services.Role)
 	providerController := controllers.NewProvidersController(services.Provider)
+	categoryController := controllers.NewCategoriesController(services.Category)
 
 	// Routes
 	app.Get("/", monitor.New(monitor.Config{
@@ -60,6 +61,7 @@ func main() {
 	routes.UserRoutes(app, userController)
 	routes.RoleRoutes(app, roleController)
 	routes.ProviderRoutes(app, providerController)
+	routes.CategoryRoutes(app, categoryController)
 	routes.FileRoutes(app)
 
 	_ = app.Listen(os.Getenv("HOST") + ":" + os.Getenv("PORT"))

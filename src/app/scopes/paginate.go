@@ -2,11 +2,11 @@ package scopes
 
 import (
 	"gorm.io/gorm"
-	"iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"math"
 )
 
-func Paginate(model interface{}, fields []string, meta *pagination.Meta, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
+func Paginate(model interface{}, fields []string, meta *paginate.Meta, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
 
 	var count int64
 	for _, field := range fields {

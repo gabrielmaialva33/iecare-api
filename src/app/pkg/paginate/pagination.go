@@ -1,4 +1,4 @@
-package pagination
+package paginate
 
 import (
 	"iecare-api/src/app/utils"

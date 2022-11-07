@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm/clause"
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/scopes"
 )
 
@@ -22,19 +22,19 @@ func NewUserRepository(db *gorm.DB) *UserRepo {
 // UserRepo implements interfaces.UserInterface
 var _ interfaces.UserInterface = &UserRepo{}
 
-func (u *UserRepo) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (u *UserRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var users models.Users
 	var fields = []string{"first_name", "last_name", "email", "user_name"}
-	var paginate pagination2.Pagination
+	var pagination paginate.Pagination
 
 	if err := u.db.Preload("Roles").Scopes(scopes.Paginate(users, fields, &meta, u.db)).Find(&users).Error; err != nil {
 		return nil, err
 	}
 
-	paginate.SetMeta(meta)
-	paginate.SetData(users.PublicUsers())
+	pagination.SetMeta(meta)
+	pagination.SetData(users.PublicUsers())
 
-	return &paginate, nil
+	return &pagination, nil
 }
 
 func (u *UserRepo) Get(id string) (*models.User, error) {
@@ -76,7 +76,7 @@ func (u *UserRepo) FindBy(field string, value string) (*models.User, error) {
 	return &user, nil
 }
 
-func (u *UserRepo) FindManyBy(field []string, value string) (*models.User, error) {
+func (u *UserRepo) FindByMany(field []string, value string) (*models.User, error) {
 	var user models.User
 	for _, f := range field {
 		u.db.Preload("Roles").Where(f+" = ?", value).First(&user)

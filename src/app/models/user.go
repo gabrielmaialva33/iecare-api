@@ -2,7 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
-	"iecare-api/src/app/pkg"
+	"iecare-api/src/app/pkg/argon"
 	"time"
 )
 
@@ -71,7 +71,7 @@ func (u Users) PublicUsers() []interface{} {
 
 // BeforeSave hook executed before saving a User to the database.
 func (u *User) BeforeSave(*gorm.DB) error {
-	hash, err := pkg.CreateHash(u.Password, pkg.DefaultParams)
+	hash, err := argon.CreateHash(u.Password, argon.DefaultParams)
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,6 @@ func (u *User) AfterCreate(db *gorm.DB) error {
 	} else if u.Role == RoleAdmin {
 		db.Where("name = ?", RoleAdmin).First(&role)
 	} else if u.Role == RoleUser {
-
 		db.Where("name = ?", RoleUser).First(&role)
 	} else if u.Role == RoleProvider {
 		db.Where("name = ?", RoleProvider).First(&role)

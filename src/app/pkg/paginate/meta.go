@@ -1,4 +1,4 @@
-package pagination
+package paginate
 
 type Meta struct {
 	Total       int64  `json:"total"`

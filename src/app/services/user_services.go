@@ -3,7 +3,7 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	paginate "iecare-api/src/app/pkg/paginate"
 )
 
 type UserServices struct {
@@ -16,7 +16,7 @@ type IUserServices interface {
 
 var _ IUserServices = &UserServices{}
 
-func (u *UserServices) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (u *UserServices) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	return u.ur.List(meta)
 }
 
@@ -40,6 +40,6 @@ func (u *UserServices) FindBy(field string, value string) (*models.User, error) 
 	return u.ur.FindBy(field, value)
 }
 
-func (u *UserServices) FindManyBy(field []string, value string) (*models.User, error) {
-	return u.ur.FindManyBy(field, value)
+func (u *UserServices) FindByMany(field []string, value string) (*models.User, error) {
+	return u.ur.FindByMany(field, value)
 }

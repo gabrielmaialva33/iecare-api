@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm/clause"
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/scopes"
 )
 
@@ -22,19 +22,19 @@ func NewRoleRepository(db *gorm.DB) *RoleRepo {
 // RoleRepo implements interfaces.RoleInterface
 var _ interfaces.RoleInterface = &RoleRepo{}
 
-func (r *RoleRepo) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (r *RoleRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var roles models.Roles
 	var fields = []string{"name", "slug", "description"}
-	var paginate pagination2.Pagination
+	var pagination paginate.Pagination
 
 	if err := r.db.Scopes(scopes.Paginate(roles, fields, &meta, r.db)).Find(&roles).Error; err != nil {
 		return nil, err
 	}
 
-	paginate.SetMeta(meta)
-	paginate.SetData(roles.PublicRoles())
+	pagination.SetMeta(meta)
+	pagination.SetData(roles.PublicRoles())
 
-	return &paginate, nil
+	return &pagination, nil
 }
 
 func (r *RoleRepo) Get(id string) (*models.Role, error) {
@@ -75,7 +75,7 @@ func (r *RoleRepo) FindBy(field string, value string) (*models.Role, error) {
 	return &role, nil
 }
 
-func (r *RoleRepo) FindManyBy(field []string, value string) (*models.Role, error) {
+func (r *RoleRepo) FindByMany(field []string, value string) (*models.Role, error) {
 	var role models.Role
 	for _, f := range field {
 		r.db.Where(f+" = ?", value).First(&role)

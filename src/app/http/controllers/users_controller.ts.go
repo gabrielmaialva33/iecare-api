@@ -5,8 +5,8 @@ import (
 	"github.com/imdario/mergo"
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	"iecare-api/src/app/pkg"
-	"iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/argon"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/services"
 	"iecare-api/src/app/utils"
 	"iecare-api/src/app/validators"
@@ -31,7 +31,7 @@ func (u *UsersController) List(c *fiber.Ctx) error {
 	sort := c.Query("sort", "id")
 	order := c.Query("order", "asc")
 
-	users, err := u.ur.List(pagination.Meta{
+	users, err := u.ur.List(paginate.Meta{
 		CurrentPage: page,
 		PerPage:     perPage,
 		Search:      search,
@@ -149,10 +149,10 @@ func (u *UsersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	emptyUser := models.User{
+	dstUser := models.User{
 		Id: user.Id,
 	}
-	if err := mergo.Merge(&emptyUser, data); err != nil {
+	if err := mergo.Merge(&dstUser, data); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while merging data",
 			"error":   err.Error(),
@@ -161,7 +161,7 @@ func (u *UsersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	if errors := validators.ValidatePartialStruct(emptyUser); len(errors) > 0 {
+	if errors := validators.ValidatePartialStruct(dstUser); len(errors) > 0 {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": "Validation failed",
 			"errors":  errors,
@@ -170,7 +170,7 @@ func (u *UsersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	editedUser, err := u.ur.Edit(&emptyUser)
+	editedUser, err := u.ur.Edit(&dstUser)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while updating user",
@@ -243,7 +243,7 @@ func (u *UsersController) SignIn(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := u.ur.FindManyBy([]string{"email", "user_name"}, data.Uid)
+	user, err := u.ur.FindByMany([]string{"email", "user_name"}, data.Uid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -253,7 +253,7 @@ func (u *UsersController) SignIn(c *fiber.Ctx) error {
 		})
 	}
 
-	if match, _ := pkg.ComparePasswordAndHash(data.Password, user.Password); match == false {
+	if match, _ := argon.ComparePasswordAndHash(data.Password, user.Password); match == false {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Invalid credentials",
 			"status":  fiber.StatusUnauthorized,

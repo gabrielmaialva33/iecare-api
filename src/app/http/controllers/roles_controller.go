@@ -5,7 +5,7 @@ import (
 	"github.com/imdario/mergo"
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	"iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/services"
 	"iecare-api/src/app/validators"
 	"strconv"
@@ -29,7 +29,7 @@ func (r *RolesController) List(c *fiber.Ctx) error {
 	sort := c.Query("sort", "id")
 	order := c.Query("order", "asc")
 
-	roles, err := r.rr.List(pagination.Meta{
+	roles, err := r.rr.List(paginate.Meta{
 		CurrentPage: page,
 		PerPage:     perPage,
 		Search:      search,
@@ -147,11 +147,11 @@ func (r *RolesController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	emptyRole := models.Role{
+	dstRole := models.Role{
 		Id:   role.Id,
 		Name: strings.ToLower(data.Slug),
 	}
-	if err := mergo.Merge(&emptyRole, data); err != nil {
+	if err := mergo.Merge(&dstRole, data); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while merging data",
 			"error":   err.Error(),
@@ -160,7 +160,7 @@ func (r *RolesController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	if errors := validators.ValidatePartialStruct(emptyRole); len(errors) > 0 {
+	if errors := validators.ValidatePartialStruct(dstRole); len(errors) > 0 {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": "Validation failed",
 			"errors":  errors,
@@ -169,7 +169,7 @@ func (r *RolesController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	editedRole, err := r.rr.Edit(&emptyRole)
+	editedRole, err := r.rr.Edit(&dstRole)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while updating user",

@@ -3,7 +3,7 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	paginate "iecare-api/src/app/pkg/paginate"
 )
 
 type ProviderServices struct {
@@ -16,7 +16,7 @@ type IProviderServices interface {
 
 var _ IProviderServices = &ProviderServices{}
 
-func (p *ProviderServices) List(meta pagination2.Meta) (*pagination2.Pagination, error) {
+func (p *ProviderServices) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	return p.pr.List(meta)
 }
 
@@ -24,22 +24,22 @@ func (p *ProviderServices) Get(id string) (*models.Provider, error) {
 	return p.pr.Get(id)
 }
 
-func (p *ProviderServices) Store(model *models.Provider) (*models.Provider, error) {
-	return p.pr.Store(model)
+func (p *ProviderServices) Store(provider *models.Provider) (*models.Provider, error) {
+	return p.pr.Store(provider)
 }
 
-func (p *ProviderServices) Edit(model *models.Provider) (*models.Provider, error) {
-	return p.pr.Edit(model)
+func (p *ProviderServices) Edit(provider *models.Provider) (*models.Provider, error) {
+	return p.pr.Edit(provider)
 }
 
-func (p *ProviderServices) Delete(model *models.Provider) error {
-	return p.pr.Delete(model)
+func (p *ProviderServices) Delete(provider *models.Provider) error {
+	return p.pr.Delete(provider)
 }
 
 func (p *ProviderServices) FindBy(field string, value string) (*models.Provider, error) {
 	return p.pr.FindBy(field, value)
 }
 
-func (p *ProviderServices) FindManyBy(field []string, value string) (*models.Provider, error) {
-	return p.pr.FindManyBy(field, value)
+func (p *ProviderServices) FindByMany(field []string, value string) (*models.Provider, error) {
+	return p.pr.FindByMany(field, value)
 }

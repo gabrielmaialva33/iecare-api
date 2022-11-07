@@ -1,4 +1,4 @@
-package pkg
+package argon
 
 import (
 	"crypto/rand"

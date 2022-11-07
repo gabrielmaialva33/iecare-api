@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/imdario/mergo"
 	"iecare-api/src/app/models"
-	"iecare-api/src/app/pkg/pagination"
+	"iecare-api/src/app/pkg/paginate"
 	"iecare-api/src/app/services"
 	"iecare-api/src/app/validators"
 	"os"
@@ -28,7 +28,7 @@ func (p *ProvidersController) List(c *fiber.Ctx) error {
 	sort := c.Query("sort", "id")
 	order := c.Query("order", "asc")
 
-	providers, err := p.pr.List(pagination.Meta{
+	providers, err := p.pr.List(paginate.Meta{
 		CurrentPage: page,
 		PerPage:     perPage,
 		Search:      search,
@@ -148,10 +148,10 @@ func (p *ProvidersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	emptyProvider := models.Provider{
+	dstProvider := models.Provider{
 		Id: provider.Id,
 	}
-	if err := mergo.Merge(&emptyProvider, data); err != nil {
+	if err := mergo.Merge(&dstProvider, data); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while merging request body",
 			"error":   err.Error(),
@@ -160,7 +160,7 @@ func (p *ProvidersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	if errors := validators.ValidateStruct(emptyProvider); len(errors) > 0 {
+	if errors := validators.ValidateStruct(dstProvider); len(errors) > 0 {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": "Validation errors",
 			"errors":  errors,
@@ -169,7 +169,7 @@ func (p *ProvidersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	provider, err = p.pr.Edit(&emptyProvider)
+	provider, err = p.pr.Edit(&dstProvider)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while updating provider",

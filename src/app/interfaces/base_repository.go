@@ -1,15 +1,15 @@
 package interfaces
 
 import (
-	pagination2 "iecare-api/src/app/pkg/pagination"
+	paginate "iecare-api/src/app/pkg/paginate"
 )
 
 type BaseRepository[T interface{}] interface {
-	List(meta pagination2.Meta) (*pagination2.Pagination, error)
+	List(meta paginate.Meta) (*paginate.Pagination, error)
 	Get(id string) (*T, error)
 	Store(model *T) (*T, error)
 	Edit(model *T) (*T, error)
 	Delete(model *T) error
 	FindBy(field string, value string) (*T, error)
-	FindManyBy(field []string, value string) (*T, error)
+	FindByMany(field []string, value string) (*T, error)
 }
