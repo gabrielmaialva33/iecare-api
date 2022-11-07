@@ -18,7 +18,7 @@ func NewProvidersRepository(db *gorm.DB) *ProviderRepo {
 	return &ProviderRepo{db}
 }
 
-var _ interfaces.ProviderInterface = &ProviderRepo{}
+var _ interfaces.BaseRepository[models.Provider] = &ProviderRepo{}
 
 func (p *ProviderRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var providers models.Providers

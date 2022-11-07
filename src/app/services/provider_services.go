@@ -3,15 +3,15 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	paginate "iecare-api/src/app/pkg/paginate"
+	"iecare-api/src/app/pkg/paginate"
 )
 
 type ProviderServices struct {
-	pr interfaces.ProviderInterface
+	pr interfaces.BaseRepository[models.Provider]
 }
 
 type IProviderServices interface {
-	interfaces.ProviderInterface
+	interfaces.BaseRepository[models.Provider]
 }
 
 var _ IProviderServices = &ProviderServices{}

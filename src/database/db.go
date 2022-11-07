@@ -10,10 +10,11 @@ import (
 )
 
 type Repositories struct {
-	User     interfaces.UserInterface
-	Role     interfaces.RoleInterface
-	Provider interfaces.ProviderInterface
-	Category interfaces.CategoryInterface
+	User     interfaces.BaseRepository[models.User]
+	Role     interfaces.BaseRepository[models.Role]
+	Provider interfaces.BaseRepository[models.Provider]
+	Category interfaces.BaseRepository[models.Category]
+	Service  interfaces.BaseRepository[models.Service]
 	db       *gorm.DB
 }
 
@@ -34,6 +35,7 @@ func Connect(dsn string) *Repositories {
 		Role:     repositories.NewRoleRepository(database),
 		Provider: repositories.NewProvidersRepository(database),
 		Category: repositories.NewCategoriesRepository(database),
+		Service:  repositories.NewServicesRepository(database),
 		db:       database,
 	}
 }
@@ -41,7 +43,7 @@ func Connect(dsn string) *Repositories {
 func (r *Repositories) Migrate() {
 	r.db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
-	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{}); err != nil {
+	if err := r.db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{}, &models.Service{}); err != nil {
 		panic(" -> Could not migrate the database")
 	}
 
@@ -53,7 +55,7 @@ func (r *Repositories) Migrate() {
 
 func (r *Repositories) Drop() {
 	r.db.Exec("DROP EXTENSION IF EXISTS \"uuid-ossp\" CASCADE;")
-	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{})
+	err := r.db.Migrator().DropTable(&models.User{}, &models.Role{}, &models.UserRole{}, &models.Provider{}, &models.Category{}, &models.Service{})
 	if err != nil {
 		panic(" -> Could not drop the database")
 	}

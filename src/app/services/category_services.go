@@ -7,11 +7,11 @@ import (
 )
 
 type CategoryServices struct {
-	cr interfaces.CategoryInterface
+	cr interfaces.BaseRepository[models.Category]
 }
 
 type ICategoryServices interface {
-	interfaces.CategoryInterface
+	interfaces.BaseRepository[models.Category]
 }
 
 var _ ICategoryServices = &CategoryServices{}

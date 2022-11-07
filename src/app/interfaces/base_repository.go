@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	paginate "iecare-api/src/app/pkg/paginate"
+	"iecare-api/src/app/pkg/paginate"
 )
 
 type BaseRepository[T interface{}] interface {
