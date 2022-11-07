@@ -937,6 +937,218 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
 
+  # services routes
+  /services:
+    get:
+      tags:
+        - Service
+      summary: List services
+      description: 'Get all services from the system'
+      operationId: ListServices
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 1
+        - name: per_page
+          in: query
+          description: Number of services per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 1
+        - name: search
+          in: query
+          description: Search by public service attributes
+          required: false
+          schema:
+            type: string
+            default: 'name'
+        - name: sort
+          in: query
+          description: Sort by public service attributes
+          required: false
+          schema:
+            type: string
+            default: 'id'
+        - name: order
+          in: query
+          description: Order by public service attributes
+          required: false
+          schema:
+            type: string
+            default: 'asc'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListServices'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    post:
+      tags:
+        - Service
+      summary: Store service
+      description: 'Store service into the system'
+      operationId: StoreService
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreService'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicService'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /services/{serviceId}:
+    get:
+      tags:
+        - Service
+      summary: Get service
+      description: 'Get service by id'
+      operationId: GetService
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: serviceId
+          in: path
+          description: Service id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicService'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    put:
+      tags:
+        - Service
+      summary: Edit service
+      description: 'Edit service by id'
+      operationId: EditService
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: serviceId
+          in: path
+          description: Service id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditService'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicService'
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+    delete:
+      tags:
+        - Service
+      summary: Delete service
+      description: 'Delete service by id'
+      operationId: DeleteService
+      security:
+        - bearerToken: [ ]
+      parameters:
+        - name: serviceId
+          in: path
+          description: Service id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: successful operation
+        '400':
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+
   # files routes
   /files:
     post:
@@ -975,6 +1187,8 @@ tags:
     description: Operations about provider
   - name: Category
     description: Operations about category
+  - name: Service
+    description: Operations about service
   - name: File
     description: Operations about file
 
@@ -1065,7 +1279,7 @@ components:
         user:
           $ref: '#/components/schemas/PublicUser'
       example:
-        id: 5b61f3db-675e-4e88-a848-5c15f1113750
+        id: 5ce6ae27-3a14-4c82-bae8-81f112d4e430
         name: Provider
         description: Provider description
         email: provider@email.com
@@ -1101,6 +1315,37 @@ components:
         name: Casa & Jardim
         description: Casa & Jardim description
         icon: 'home'
+    PublicService:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          $ref: '#/components/schemas/PublicCategory'
+        provider:
+          $ref: '#/components/schemas/PublicProvider'
+      example:
+        id: b1e1fbc4-d387-49d5-ac90-dcb722cfab0e
+        name: Service
+        description: Service description
+        price: 100
+        category:
+          id: 24e961fe-7624-415e-b3f6-36ff54a4c5f1
+          name: Casa & Jardim
+          description: Casa & Jardim description
+          icon: 'home'
+        provider:
+          id: 8b365e51-b914-4ac3-b8fd-66c04df9474d
+          name: Provider
+          description: Provider description
+          email: provider@email.com
     File:
       type: object
       properties:
@@ -1127,6 +1372,13 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/File'
+      example:
+        - filename: 'file-1602510000.jpg'
+          original_filename: 'file.jpg'
+          format: 'jpeg'
+          type: 'image'
+          size: 123456
+          url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
 
     # Request Body Schemas
     SignIn:
@@ -1293,6 +1545,53 @@ components:
         name: Category Name
         description: Category Description
         icon: 'hammer'
+    # Services
+    StoreService:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category_id:
+          type: string
+        provider_id:
+          type: string
+      required:
+        - name
+        - description
+        - price
+        - category_id
+        - provider_id
+      example:
+        name: Service
+        description: Service description
+        price: 104.99
+        category_id: 863fa45f-bbe8-429e-bea2-2209cd4fbb84
+        provider_id: 24e961fe-7624-415e-b3f6-36ff54a4c5f1
+    EditService:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category_id:
+          type: string
+          format: uuid
+        provider_id:
+          type: string
+          format: uuid
+      example:
+        name: Service
+        description: Service description
+        price: 104.99
+        category_id: 9106bf03-7219-46fe-a2e6-8aa75c418d49
+        provider_id: 24e961fe-7624-415e-b3f6-36ff54a4c5f1
 
     # Responses Schemas
     Meta:
@@ -1360,7 +1659,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PublicCategory'
-
+    ListServices:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicService'
     # Success Responses
     SignInSuccess:
       type: object

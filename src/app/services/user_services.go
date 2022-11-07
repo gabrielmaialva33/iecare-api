@@ -3,15 +3,15 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	paginate "iecare-api/src/app/pkg/paginate"
+	"iecare-api/src/app/pkg/paginate"
 )
 
 type UserServices struct {
-	ur interfaces.UserInterface
+	ur interfaces.BaseRepository[models.User]
 }
 
 type IUserServices interface {
-	interfaces.UserInterface
+	interfaces.BaseRepository[models.User]
 }
 
 var _ IUserServices = &UserServices{}

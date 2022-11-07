@@ -18,7 +18,7 @@ func NewCategoriesRepository(db *gorm.DB) *CategoryRepo {
 	return &CategoryRepo{db}
 }
 
-var _ interfaces.CategoryInterface = &CategoryRepo{}
+var _ interfaces.BaseRepository[models.Category] = &CategoryRepo{}
 
 func (c CategoryRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var categories models.Categories

@@ -11,24 +11,22 @@ import (
 	"strings"
 )
 
-// RolesController is a controller for roles
-type RolesController struct {
-	rs services.IRoleServices
+type ServicesController struct {
+	ss services.IServiceServices
 }
 
-// NewRolesController is a constructor for RolesController
-func NewRolesController(rs services.IRoleServices) *RolesController {
-	return &RolesController{rs}
+func NewServicesController(ss services.IServiceServices) *ServicesController {
+	return &ServicesController{ss}
 }
 
-func (r *RolesController) List(c *fiber.Ctx) error {
+func (s *ServicesController) List(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	perPage, _ := strconv.Atoi(c.Query("per_page", "10"))
 	search := c.Query("search", "")
 	sort := c.Query("sort", "id")
 	order := c.Query("order", "asc")
 
-	roles, err := r.rs.List(paginate.Meta{
+	listServices, err := s.ss.List(paginate.Meta{
 		CurrentPage: page,
 		PerPage:     perPage,
 		Search:      search,
@@ -37,96 +35,42 @@ func (r *RolesController) List(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Error while getting roles",
+			"message": "Error while getting services",
 			"error":   err.Error(),
 			"status":  fiber.StatusBadRequest,
 			"display": true,
 		})
 	}
 
-	return c.JSON(roles)
+	return c.JSON(listServices)
 }
 
-func (r *RolesController) Get(c *fiber.Ctx) error {
-	uuid := c.Params("roleId")
+func (s *ServicesController) Get(c *fiber.Ctx) error {
+	uuid := c.Params("serviceId")
 
 	if validators.ValidateUUID(uuid) == false {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid UUID",
 			"status":  fiber.StatusBadRequest,
-			"display": false,
+			"display": true,
 		})
 	}
 
-	role, err := r.rs.Get(uuid)
+	service, err := s.ss.Get(uuid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Role not found",
+			"message": "Service not found",
 			"error":   err.Error(),
 			"status":  fiber.StatusNotFound,
 			"display": true,
 		})
 	}
 
-	return c.JSON(role.PublicRole())
+	return c.JSON(service.PublicService())
 }
 
-func (r *RolesController) Store(c *fiber.Ctx) error {
-	data := models.Role{}
-	if err := c.BodyParser(&data); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Error while parsing body",
-			"error":   err.Error(),
-			"status":  fiber.StatusBadRequest,
-			"display": true,
-		})
-	}
-
-	role := models.Role{
-		Name: strings.ToLower(data.Slug),
-	}
-	if err := mergo.Merge(&role, data); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Error while merging data",
-			"error":   err.Error(),
-			"status":  fiber.StatusInternalServerError,
-			"display": true,
-		})
-	}
-
-	if errors := validators.ValidateStruct(role); len(errors) > 0 {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"message": "Validation failed",
-			"errors":  errors,
-			"status":  fiber.StatusUnprocessableEntity,
-			"display": true,
-		})
-	}
-
-	newRole, err := r.rs.Store(&role)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Error while creating role",
-			"error":   err.Error(),
-			"status":  fiber.StatusBadRequest,
-			"display": false,
-		})
-	}
-
-	return c.JSON(newRole.PublicRole())
-}
-
-func (r *RolesController) Edit(c *fiber.Ctx) error {
-	uuid := c.Params("roleId")
-	if validators.ValidateUUID(uuid) == false {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid UUID",
-			"status":  fiber.StatusBadRequest,
-			"display": false,
-		})
-	}
-
-	data := models.Role{}
+func (s *ServicesController) Store(c *fiber.Ctx) error {
+	data := models.Service{}
 	if err := c.BodyParser(&data); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error while parsing data",
@@ -136,21 +80,8 @@ func (r *RolesController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	role, err := r.rs.Get(uuid)
-	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Role not found",
-			"error":   err.Error(),
-			"status":  fiber.StatusNotFound,
-			"display": true,
-		})
-	}
-
-	dstRole := models.Role{
-		Id:   role.Id,
-		Name: strings.ToLower(data.Slug),
-	}
-	if err := mergo.Merge(&dstRole, data); err != nil {
+	service := models.Service{}
+	if err := mergo.Merge(&service, data); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while merging data",
 			"error":   err.Error(),
@@ -159,57 +90,119 @@ func (r *RolesController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	if errors := validators.ValidatePartialStruct(dstRole); len(errors) > 0 {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
-			"message": "Validation failed",
+	if errors := validators.ValidateStruct(service); len(errors) > 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Validation error",
 			"errors":  errors,
-			"status":  fiber.StatusUnprocessableEntity,
+			"status":  fiber.StatusBadRequest,
 			"display": true,
 		})
 	}
 
-	editedRole, err := r.rs.Edit(&dstRole)
+	newService, err := s.ss.Store(&service)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Error while updating user",
+			"message": "Error while creating service",
 			"error":   err.Error(),
 			"status":  fiber.StatusInternalServerError,
 			"display": false,
 		})
 	}
 
-	return c.JSON(editedRole.PublicRole())
+	return c.JSON(newService.PublicService())
 }
 
-func (r *RolesController) Delete(c *fiber.Ctx) error {
-	uuid := c.Params("roleId")
+func (s *ServicesController) Edit(c *fiber.Ctx) error {
+	uuid := c.Params("serviceId")
 	if validators.ValidateUUID(uuid) == false {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid UUID",
+			"status":  fiber.StatusBadRequest,
+			"display": true,
+		})
+	}
+
+	data := models.Service{}
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Error while parsing data",
+			"error":   err.Error(),
 			"status":  fiber.StatusBadRequest,
 			"display": false,
 		})
 	}
 
-	role, err := r.rs.Get(uuid)
+	service, err := s.ss.Get(uuid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "User not found",
+			"message": "Service not found",
 			"error":   err.Error(),
 			"status":  fiber.StatusNotFound,
 			"display": true,
 		})
 	}
 
-	deleteRole := models.Role{
-		Id:   role.Id,
-		Name: "deleted:" + role.Name + ":" + strings.Split(role.Id, "-")[0],
-		Slug: "deleted:" + role.Slug + ":" + strings.Split(role.Id, "-")[0],
+	dstService := models.Service{
+		Id: service.Id,
+	}
+	if err := mergo.Merge(&dstService, data); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Error while merging data",
+			"error":   err.Error(),
+			"status":  fiber.StatusInternalServerError,
+			"display": false,
+		})
 	}
 
-	if err := r.rs.Delete(&deleteRole); err != nil {
+	if errors := validators.ValidateStruct(service); len(errors) > 0 {
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"message": "Validation error",
+			"errors":  errors,
+			"status":  fiber.StatusUnprocessableEntity,
+			"display": true,
+		})
+	}
+
+	editedService, err := s.ss.Edit(&dstService)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Error while deleting user",
+			"message": "Error while editing service",
+			"error":   err.Error(),
+			"status":  fiber.StatusInternalServerError,
+			"display": false,
+		})
+	}
+
+	return c.JSON(editedService.PublicService())
+}
+
+func (s *ServicesController) Delete(c *fiber.Ctx) error {
+	uuid := c.Params("serviceId")
+	if validators.ValidateUUID(uuid) == false {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid UUID",
+			"status":  fiber.StatusBadRequest,
+			"display": true,
+		})
+	}
+
+	service, err := s.ss.Get(uuid)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Service not found",
+			"error":   err.Error(),
+			"status":  fiber.StatusNotFound,
+			"display": true,
+		})
+	}
+
+	deleteService := models.Service{
+		Id:   service.Id,
+		Name: "deleted:" + service.Name + ":" + strings.Split(service.Id, "-")[0],
+	}
+	if err := s.ss.Delete(&deleteService); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Error while deleting service",
 			"error":   err.Error(),
 			"status":  fiber.StatusInternalServerError,
 			"display": false,
@@ -217,6 +210,6 @@ func (r *RolesController) Delete(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
-		"message": "Role deleted",
+		"message": "Service deleted successfully",
 	})
 }

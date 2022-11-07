@@ -20,7 +20,7 @@ func NewRoleRepository(db *gorm.DB) *RoleRepo {
 }
 
 // RoleRepo implements interfaces.RoleInterface
-var _ interfaces.RoleInterface = &RoleRepo{}
+var _ interfaces.BaseRepository[models.Role] = &RoleRepo{}
 
 func (r *RoleRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var roles models.Roles

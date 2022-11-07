@@ -3,15 +3,15 @@ package services
 import (
 	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
-	paginate "iecare-api/src/app/pkg/paginate"
+	"iecare-api/src/app/pkg/paginate"
 )
 
 type RoleServices struct {
-	rr interfaces.RoleInterface
+	rr interfaces.BaseRepository[models.Role]
 }
 
 type IRoleServices interface {
-	interfaces.RoleInterface
+	interfaces.BaseRepository[models.Role]
 }
 
 var _ IRoleServices = &RoleServices{}

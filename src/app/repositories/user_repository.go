@@ -20,7 +20,7 @@ func NewUserRepository(db *gorm.DB) *UserRepo {
 }
 
 // UserRepo implements interfaces.UserInterface
-var _ interfaces.UserInterface = &UserRepo{}
+var _ interfaces.BaseRepository[models.User] = &UserRepo{}
 
 func (u *UserRepo) List(meta paginate.Meta) (*paginate.Pagination, error) {
 	var users models.Users

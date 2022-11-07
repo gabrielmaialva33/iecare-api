@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/imdario/mergo"
-	"iecare-api/src/app/interfaces"
 	"iecare-api/src/app/models"
 	"iecare-api/src/app/pkg/argon"
 	"iecare-api/src/app/pkg/paginate"
@@ -16,12 +15,12 @@ import (
 
 // UsersController is the controller for users
 type UsersController struct {
-	ur services.IUserServices
+	us services.IUserServices
 }
 
 // NewUsersController creates a new instance of the user controller
-func NewUsersController(ur interfaces.UserInterface) *UsersController {
-	return &UsersController{ur}
+func NewUsersController(us services.IUserServices) *UsersController {
+	return &UsersController{us}
 }
 
 func (u *UsersController) List(c *fiber.Ctx) error {
@@ -31,7 +30,7 @@ func (u *UsersController) List(c *fiber.Ctx) error {
 	sort := c.Query("sort", "id")
 	order := c.Query("order", "asc")
 
-	users, err := u.ur.List(paginate.Meta{
+	users, err := u.us.List(paginate.Meta{
 		CurrentPage: page,
 		PerPage:     perPage,
 		Search:      search,
@@ -61,7 +60,7 @@ func (u *UsersController) Get(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := u.ur.Get(uuid)
+	user, err := u.us.Get(uuid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -106,7 +105,7 @@ func (u *UsersController) Store(c *fiber.Ctx) error {
 		})
 	}
 
-	newUser, err := u.ur.Store(&user)
+	newUser, err := u.us.Store(&user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while creating user",
@@ -139,7 +138,7 @@ func (u *UsersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := u.ur.Get(uuid)
+	user, err := u.us.Get(uuid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -170,7 +169,7 @@ func (u *UsersController) Edit(c *fiber.Ctx) error {
 		})
 	}
 
-	editedUser, err := u.ur.Edit(&dstUser)
+	editedUser, err := u.us.Edit(&dstUser)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while updating user",
@@ -193,7 +192,7 @@ func (u *UsersController) Delete(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := u.ur.Get(uuid)
+	user, err := u.us.Get(uuid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -209,7 +208,7 @@ func (u *UsersController) Delete(c *fiber.Ctx) error {
 		UserName: "deleted:" + user.UserName + ":" + strings.Split(user.Id, "-")[0],
 	}
 
-	if err := u.ur.Delete(&deleteUser); err != nil {
+	if err := u.us.Delete(&deleteUser); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while deleting user",
 			"error":   err.Error(),
@@ -243,7 +242,7 @@ func (u *UsersController) SignIn(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := u.ur.FindByMany([]string{"email", "user_name"}, data.Uid)
+	user, err := u.us.FindByMany([]string{"email", "user_name"}, data.Uid)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "User not found",
@@ -310,7 +309,7 @@ func (u *UsersController) SignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	newUser, err := u.ur.Store(&user)
+	newUser, err := u.us.Store(&user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error while creating user",
