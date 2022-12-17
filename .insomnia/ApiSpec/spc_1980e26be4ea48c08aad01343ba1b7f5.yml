@@ -1,7 +1,7 @@
 _id: spc_1980e26be4ea48c08aad01343ba1b7f5
 type: ApiSpec
 parentId: wrk_dd629d84246a4e29aed4652d9e6112d5
-modified: 1667819802438
+modified: 1671302230104
 created: 1667667406076
 fileName: iecare-api
 contents: >+
@@ -16,7 +16,7 @@ contents: >+
       email: gabrielmaialva33@gmail.com
       url: github.com/gabrielmaialva33
   servers:
-    - url: https://iecare.api.mrootx.xyz/
+    - url: https://iecare.api.mrootx.xyz
     - url: http://127.0.0.1:3333
   paths:
     # public routes
@@ -1206,15 +1206,6 @@ contents: >+
         type: http
         scheme: bearer
         bearerFormat: JWT
-    responses:
-      '200':
-        description: OK
-      '401':
-        description: Unauthorized
-      '422':
-        description: Unprocessable Entity
-      '404':
-        description: Not Found
     schemas:
       # Entities
       PublicUser:
