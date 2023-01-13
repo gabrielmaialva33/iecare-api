@@ -22,7 +22,8 @@ type Provider struct {
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;index,default:null" json:"-"`
 
 	// Relationships
-	User User `gorm:"foreignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user" validate:"-"`
+	User     User     `gorm:"foreignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user" validate:"-"`
+	Services Services `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"services"`
 }
 
 type Providers []Provider

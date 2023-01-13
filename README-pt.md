@@ -34,10 +34,10 @@
 
 ## :bookmark: Sobre
 
-**IECare API** é uma API base de lista de controle de acesso que espera atender a muitos projetos estriado em **Go**.
+**IECare API** é uma API base de lista de controle de acesso que espera atender a muitos projetos em **Go**.
 
 <kbd>
-  <img src=".github/assets/schema.svg" alt="schema">
+  <img src=".github/assets/schema.png" alt="schema">
 </kbd>
 
 <br>

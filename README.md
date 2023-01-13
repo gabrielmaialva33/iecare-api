@@ -37,7 +37,7 @@
 **IECare API ** is an access control list base api that hopes to serve many projects written in Go.
 
 <kbd>
-  <img src=".github/assets/schema.svg" alt="schema">
+  <img src=".github/assets/schema.png" alt="schema">
 </kbd>
 
 <br>

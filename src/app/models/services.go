@@ -13,12 +13,16 @@ type Service struct {
 	Description string  `gorm:"column:description;type:text;not null;" json:"description" validate:"required,min=2,max=255,omitempty"`
 	Price       float64 `gorm:"column:price;not null;" json:"price" validate:"required,min=0.01"`
 	Image       string  `gorm:"column:image;size:255;" json:"image" validate:"omitempty"`
+	CategoryId  string  `gorm:"column:category_id;type:uuid;not null;index;" json:"category_id"`
+	ProviderId  string  `gorm:"column:provider_id;type:uuid;not null;index;" json:"provider_id"`
 
 	CreatedAt time.Time      `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP" json:"-"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP" json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index,default:null" json:"-"`
 
 	// Relationships
+	Category Category `gorm:"foreignKey:CategoryId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"category"`
+	Provider Provider `gorm:"foreignKey:ProviderId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"provider"`
 }
 
 type Services []Service

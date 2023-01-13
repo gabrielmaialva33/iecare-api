@@ -17,6 +17,7 @@ type Category struct {
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;index,default:null" json:"-"`
 
 	// Relationships
+	Services Services `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"services"`
 }
 
 type Categories []Category
